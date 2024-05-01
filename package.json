@@ -1,6 +1,6 @@
 {
   "name": "dom-preview",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "A replacement for vitest-preview with a few more features.",
   "main": "index.js",
   "scripts": {
@@ -9,15 +9,21 @@
     "build:esm": "tsc --project tsconfig.esm.json",
     "build": "npm run build:cjs && npm run build:esm",
     "format": "prettier -w .",
-    "dev": "vitest --ui"
+    "dev": "run-p dev:*",
+    "dev:unit": "vitest --ui",
+    "dev:live-server": "live-server .dom-preview"
   },
   "author": "Nils Knappmeier",
   "license": "MIT",
   "devDependencies": {
+    "@testing-library/dom": "10.1.0",
+    "@testing-library/user-event": "14.5.2",
     "@types/jsdom": "21.1.6",
     "@types/node": "20.12.7",
     "@vitest/ui": "1.5.1",
     "jsdom": "24.0.0",
+    "live-server": "1.2.2",
+    "npm-run-all": "4.1.5",
     "prettier": "3.2.5",
     "typescript": "5.4.5",
     "vitest": "1.5.1"

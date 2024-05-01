@@ -1,5 +1,4 @@
 import fs from "fs";
-import { afterEach } from "node:test";
 import path from "path";
 
 const outputFile = path.join(".dom-preview", "index.html");
