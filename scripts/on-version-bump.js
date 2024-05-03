@@ -18,4 +18,4 @@ Date: ${new Date().toISOString()}
 });
 
 cp.execSync("node ./scripts/build-readme.js", { stdio: "inherit" });
-cp.execSync("./scripts/build-cjs.sh", { stdio: "inherit" });
+cp.execSync("npm run build", { stdio: "inherit" });
