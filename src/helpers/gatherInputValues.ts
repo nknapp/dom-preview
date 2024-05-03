@@ -1,3 +1,6 @@
 export function gatherInputValues(): Array<string> {
-    return []
+  return [...document.querySelectorAll("input")].map((input) => {
+    console.log("input", input.value);
+    return input.value;
+  });
 }

@@ -3,7 +3,9 @@
   "compilerOptions": {
     "module": "ESNext",
     "noEmit": false,
-    "outDir": "dist/esm"
+    "emitDeclarationOnly": true,
+    "declaration": true,
+    "outDir": "dist/types"
   },
   "exclude": ["**/*.test.ts", "src/test-utils/**"]
 }

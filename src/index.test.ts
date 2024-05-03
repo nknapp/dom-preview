@@ -3,38 +3,35 @@ import fs from "fs/promises";
 import { describe, expect, it } from "vitest";
 import { JSDOM } from "jsdom";
 import { DOMWindow } from "jsdom";
-import {dom} from "./test-utils/dom";
-import {user} from "./test-utils/user";
+import { dom } from "./test-utils/dom";
+import { user } from "./test-utils/user";
 
 describe("debug", () => {
   it("copies html to the output file", async () => {
     document.body.innerHTML = "<div>Hello world!</div>";
     debug();
 
-    await withTargetFile(({ document }) => {
-      expect(document.body.innerHTML).toEqual("<div>Hello world!</div>");
-    });
+    const preview = await loadDom(".dom-preview/index.html");
+    expect(preview.document.querySelector("div")?.textContent).toEqual(
+      "Hello world!",
+    );
   });
 
-  it.only("rehydrates values in input fields", async () => {
+  it("rehydrates values in input fields", async () => {
     document.body.innerHTML = `
         <input type='text' value='' />
     `;
-    debug();
-    await user.type(dom.getByRole("textbox"), "abc")
+    const byRole = dom.getByRole("textbox");
+    await user.type(byRole, "abc");
 
-    await withTargetFile(({ document }) => {
-      expect(document.querySelector("input")!.value).toEqual("abc")
-    });
+    debug();
+
+    const preview = await loadDom(".dom-preview/index.html");
+    expect(preview.document.querySelector("input")!.value).toEqual("abc");
   });
 });
 
-async function withTargetFile(
-  callback: (dom: {
-    window: DOMWindow;
-    document: Document;
-  }) => Promise<void> | void,
-): Promise<void> {
-  const dom = new JSDOM(await fs.readFile(".dom-preview/index.html"));
-  await callback({ window: dom.window, document: dom.window.document });
+async function loadDom(file: string): Promise<{ document: Document }> {
+  const dom = new JSDOM(await fs.readFile(file), { runScripts: "dangerously" });
+  return { document: dom.window.document };
 }

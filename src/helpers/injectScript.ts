@@ -3,10 +3,10 @@ export function injectScript<Args extends unknown[]>(
   fn: (...args: Args) => void,
   args: Args,
 ) {
-  const stringifiedArgs = args.map((arg) => JSON.stringify(arg)).join(",");
+  const argsAsString = args.map((arg) => JSON.stringify(arg)).join(",");
   const script = `
-        <script type="application/javascript">
-            (${fn.toString()})(${stringifiedArgs})
+        <script type="text/javascript">
+            (${fn.toString()})(${argsAsString})
         </script>
 `;
   return html.replace("</body>", `${script}</body>`);
