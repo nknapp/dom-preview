@@ -7,7 +7,7 @@
   "module": "dist/esm/index.js",
   "main": "dist/cjs/index.js",
   "scripts": {
-    "test": "vitest run && tysc",
+    "test": "vitest run && tsc --project tsconfig.json --noEmit",
     "prebuild": "rm -rf dist",
     "build:cjs": "tsc --project tsconfig.cjs.json",
     "build:esm": "tsc --project tsconfig.esm.json",
