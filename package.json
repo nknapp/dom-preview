@@ -1,6 +1,6 @@
 {
   "name": "dom-preview",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A replacement for vitest-preview with a few more features.",
   "types": "dist/types/index.d.ts",
   "type": "module",
