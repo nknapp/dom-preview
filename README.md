@@ -4,13 +4,13 @@
 
 ## Introduction
 
-`vitest-preview` was a creates help debugging our test-cases, but some things are missing, and some things
+`vitest-preview` was a great help debugging our test-cases, but some things are missing, and some things
 I would consider not necessary.
 
-** Missing: values of input fields are not shown in the preview
-** Missing: the active element is not shown
-\*\* Unnecessary: the integrated live-server is not necessary in my opinion. There are projects like `live-server`
-on npm that can be used for this.
+- Missing: values of input fields are not shown in the preview
+- Missing: the active element is not shown
+- Unnecessary: the integrated live-server is not necessary in my opinion. There are projects like `live-server`
+  on npm that can be used for this.
 
 This project only provides the `debug()` command, like `vitest-preview`. But it adds the missing things.
 Bring your own live-server, the `debug()` command just dumps to current dom into `.dom-preview/index.html`.
