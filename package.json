@@ -9,13 +9,15 @@
   "scripts": {
     "test": "vitest run && tsc --project tsconfig.json --noEmit",
     "prebuild": "rm -rf dist",
+    "build:ui": "cd server/ui && vite build",
     "build:cjs": "tsc --project tsconfig.cjs.json",
     "build:esm": "tsc --project tsconfig.esm.json",
     "build:types": "tsc --project tsconfig.types.json",
     "build": "run-p build:*",
     "format": "prettier -w .",
     "dev:unit": "vitest --ui",
-    "dev:live-server": "live-server .dom-preview",
+    "dev:server": "nodemon --exec vite-node server/cli.ts",
+    "dev:ui": "cd server/ui && vite",
     "dev": "run-p dev:*",
     "version": "node ./scripts/on-version-bump.js",
     "prepare": "./scripts/on-postinstall.sh",
@@ -27,13 +29,17 @@
     "@testing-library/dom": "10.1.0",
     "@testing-library/user-event": "14.5.2",
     "@types/jsdom": "21.1.6",
-    "@types/node": "20.12.7",
-    "@vitest/ui": "1.5.1",
+    "@types/node": "20.12.11",
+    "@vitest/ui": "1.6.0",
     "jsdom": "24.0.0",
+    "lit-html": "3.1.3",
     "live-server": "1.2.2",
+    "nodemon": "3.1.0",
     "npm-run-all": "4.1.5",
     "prettier": "3.2.5",
     "typescript": "5.4.5",
-    "vitest": "1.5.1"
+    "vite": "5.2.11",
+    "vite-node": "1.6.0",
+    "vitest": "1.6.0"
   }
 }

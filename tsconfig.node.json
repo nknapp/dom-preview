@@ -1,15 +1,14 @@
 {
   "compilerOptions": {
+    "composite": true,
+    "baseUrl": ".",
+    "lib": ["DOM", "DOM.Iterable"],
     "target": "ES2016",
     "moduleResolution": "Node",
     "esModuleInterop": true,
-    "module": "ESNext",
-    "noEmit": true,
     "strict": true,
     "skipLibCheck": true,
-    "paths": {
-      "@/*": ["./src/*"],
-      "@server/*": ["./server/*"]
-    }
-  }
+    "outDir": "tsc-out/node"
+  },
+  "include": ["vitest.config.ts"]
 }

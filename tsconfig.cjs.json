@@ -1,9 +1,0 @@
-{
-  "extends": ["./tsconfig"],
-  "compilerOptions": {
-    "module": "CommonJS",
-    "noEmit": false,
-    "outDir": "dist/cjs"
-  },
-  "exclude": ["**/*.test.ts", "src/test-utils/**"]
-}

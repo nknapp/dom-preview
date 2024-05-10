@@ -31,8 +31,6 @@ describe("injectScript", () => {
       ["Goodbye ", 2],
     );
 
-    console.log("html", html);
-
     const { window } = new JSDOM(html, { runScripts: "dangerously" });
     expect(window.document.querySelector("div")?.textContent).toEqual(
       "Goodbye Goodbye ",
