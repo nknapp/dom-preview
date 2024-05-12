@@ -20,7 +20,7 @@
     "dev:ui": "cd server/ui && vite",
     "dev": "run-p dev:*",
     "version": "node ./scripts/on-version-bump.js",
-    "prepare": "./scripts/on-postinstall.sh && husky install",
+    "prepare": "./scripts/on-prepare.sh",
     "postversion": "git push origin main --tags && npm publish"
   },
   "author": "Nils Knappmeier",
