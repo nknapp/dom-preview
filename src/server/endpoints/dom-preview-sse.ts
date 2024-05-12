@@ -2,7 +2,7 @@ import { IncomingMessage, ServerResponse } from "node:http";
 import { DomPreview } from "../../model/DomPreview";
 import { logInfo } from "../utils/logger";
 
-export class UpdateSSE {
+export class DomPreviewSse {
   pendingResponses = new Set<ServerResponse>();
 
   constructor() {}

@@ -5,6 +5,7 @@ import { ReqResHandler } from "../utils/asReqResHandler";
 
 export function createApi(store: DomPreviewStore): ReqResHandler {
   const api = new Router();
+
   api.get("/api/previews/{context}/{count}", async (req, params) => {
     return Response.json(
       store.domPreviews[params.context][Number(params.count)],

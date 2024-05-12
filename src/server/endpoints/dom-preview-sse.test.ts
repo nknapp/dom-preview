@@ -1,4 +1,4 @@
-import { UpdateSSE } from "./update-sse";
+import { DomPreviewSse } from "./dom-preview-sse";
 import { createTestServer } from "../test-utils/createTestServer";
 import { createDomPreview } from "../../model/DomPreview.test-helper";
 import { DomPreview } from "../../model/DomPreview";
@@ -7,7 +7,7 @@ import { delay } from "../test-utils/delay";
 
 describe("update-sse", () => {
   it("sends preview-added events to multiple clients", async () => {
-    const sse = new UpdateSSE();
+    const sse = new DomPreviewSse();
     const { baseUrl } = await createTestServer((req, res) => {
       sse.handleRequest(req, res);
     });
@@ -29,7 +29,7 @@ describe("update-sse", () => {
   });
 
   it("clears closed sockets", async () => {
-    const sse = new UpdateSSE();
+    const sse = new DomPreviewSse();
     const { baseUrl } = await createTestServer((req, res) => {
       sse.handleRequest(req, res);
     });

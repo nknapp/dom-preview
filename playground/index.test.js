@@ -12,6 +12,7 @@ describe("counter", () => {
     const counter = createCounter();
     document.body.append(counter);
     await user.click(counter);
+
     debug();
     expect(counter.textContent).toEqual("Count 1");
   });

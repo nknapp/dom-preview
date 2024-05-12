@@ -1,26 +1,19 @@
 import http from "node:http";
 import { createUiHandler } from "./endpoints/deliver-ui";
 import { DomPreviewStore } from "./store/DomPreviewStore";
-import { UpdateSSE } from "./endpoints/update-sse";
-import { createDomPreview } from "../model/DomPreview.test-helper";
+import { DomPreviewSse } from "./endpoints/dom-preview-sse";
 import { createApi } from "./endpoints/api";
 
 export async function startServer(port: number, uiBaseDir: string) {
   const store = new DomPreviewStore();
-  const sse = new UpdateSSE();
+  const sse = new DomPreviewSse();
+  // TODO: Tests missing
+  store.on("preview-added", (domPreview) => {
+    sse.previewAdded(domPreview);
+  });
 
   const uiHandler = createUiHandler(uiBaseDir);
   const api = createApi(store);
-
-  // TODO: This is just for demo purposes and should be removed
-  const interval = setInterval(() => {
-    sse.previewAdded(
-      createDomPreview({
-        html: `<html><div>Test ${Date.now()}</div></html>`,
-        timestamp: Date.now(),
-      }),
-    );
-  }, 1000);
 
   const server = http.createServer(async (req, res) => {
     if (req.url == null) {
@@ -45,7 +38,6 @@ export async function startServer(port: number, uiBaseDir: string) {
   return {
     stop() {
       server.close();
-      clearInterval(interval);
     },
   };
 }
