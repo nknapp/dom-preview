@@ -2,8 +2,8 @@ import { debug } from "./index";
 import fs from "fs/promises";
 import { describe, expect, it } from "vitest";
 import { JSDOM } from "jsdom";
-import { dom } from "@/test-utils/dom";
-import { user } from "@/test-utils/user";
+import { dom } from "./test-utils/dom";
+import { user } from "./test-utils/user";
 
 describe("debug", () => {
   it("copies html to the output file", async () => {

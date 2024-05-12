@@ -3,7 +3,7 @@
 import { beforeEach } from "vitest";
 import "eventsource/lib/eventsource-polyfill";
 
-vi.mock("@server/utils/logger");
+vi.mock("../server/utils/logger");
 
 beforeEach(() => {
   vi.clearAllMocks();
