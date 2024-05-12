@@ -4,12 +4,9 @@ import {
   Server,
   ServerResponse,
 } from "node:http";
-import { Readable } from "node:stream";
-import { ReadableStream } from "node:stream/web";
-import { pipeResponse } from "@server/utils/pipeResponse";
 
 export async function createTestServer(
-  handler: (req: IncomingMessage) => Promise<Response>,
+  handler: (req: IncomingMessage, res: ServerResponse) => void,
 ) {
   const server = await startServer(handler);
   const port = getPort(server);
@@ -23,6 +20,7 @@ export async function createTestServer(
   }
 
   return {
+    baseUrl,
     fetchResponse,
     async fetchText(path: string, init?: RequestInit): Promise<string> {
       return (await fetchResponse(path, init)).text();
@@ -34,11 +32,10 @@ export async function createTestServer(
 }
 
 async function startServer(
-  handler: (req: IncomingMessage) => Promise<Response>,
+  handler: (req: IncomingMessage, res: ServerResponse) => void,
 ) {
   const server = createServer(async (req, res) => {
-    const response = await handler(req);
-    pipeResponse(response, res);
+    handler(req, res);
   });
   await new Promise<void>((resolve) =>
     server.listen({ port: 0, host: "localhost" }, resolve),

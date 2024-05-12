@@ -1,69 +1,48 @@
 import http, { IncomingMessage } from "node:http";
-import { RouteMatcher } from "./router/router";
-import { pipeline } from "node:stream/promises";
 import { buffer } from "node:stream/consumers";
-import { DomPreview } from "@/model/DomPreview";
-import { createUiHandler } from "@server/router/deliver-ui";
-import { pipeResponse } from "@server/utils/pipeResponse";
+import { createUiHandler } from "@server/endpoints/deliver-ui";
+import { asReqResHandler } from "@server/utils/asReqResHandler";
+import { DomPreviewStore } from "@server/store/DomPreviewStore";
+import { UpdateSSE } from "@server/endpoints/update-sse";
+import { createDomPreview } from "@/model/DomPreview.test-helper";
+import { match } from "node:assert";
+import { Router } from "@server/router/Router";
+import { createApi } from "@server/endpoints/api";
 
 // Virtual file structure
 // GET /__preview__/{context}/{count}
 // POST /__preview__/{context}
 
 export async function startServer(port: number) {
-  const domPreviews: Record<string, DomPreview[]> = {};
-
-  const matchers: Record<string, RouteMatcher> = {
-    get: new RouteMatcher(),
-    post: new RouteMatcher(),
-  };
-  matchers.get.add("/__preview__/{context}/{count}", async (req, params) => {
-    return Response.json(domPreviews[params.context][Number(params.count)]);
-  });
-
-  matchers.post.add("/__preview__/{context}", async (req, params) => {
-    const body = await buffer(req);
-    // TODO: extract store, save to disc
-    const parsedBody = JSON.parse(body.toString("utf-8"));
-    domPreviews[params.context] = domPreviews[params.context] || [];
-    domPreviews[params.context].push(parsedBody);
-    return Response.json({ success: true });
-  });
+  const store = new DomPreviewStore();
+  const sse = new UpdateSSE();
 
   const uiHandler = createUiHandler();
+  const api = createApi(store);
 
-  async function handleRequest(req: IncomingMessage): Promise<Response> {
-    if (req.method == null) {
-      return Response.json(
-        { error: "no method" },
-        { status: 400, statusText: "No method found" },
-      );
-    }
-    const uiResponse = await uiHandler(req);
-    if (uiResponse != null) {
-      return uiResponse;
-    }
-    let method = req.method.toLowerCase();
-    const matcher = matchers[method];
-    if (matcher == null)
-      return Response.json({ error: "Method not allowed" }, { status: 405 });
-    if (req.url == null)
-      return Response.json({ error: "Request has no method" }, { status: 400 });
-
-    const match = matcher.match(req.url);
-    try {
-      return await match.handler(req, match.params);
-    } catch (error) {
-      console.error(error);
-      return Response.json(
-        { error: "Internal Server Error" },
-        { status: 500, statusText: "Internal Server Error" },
-      );
-    }
-  }
+  // TODO: This is just for demo purposes and should be removed
+  const interval = setInterval(() => {
+    sse.previewAdded(
+      createDomPreview({
+        html: `<html><div>Test ${Date.now()}</div></html>`,
+        timestamp: Date.now(),
+      }),
+    );
+  }, 1000);
 
   const server = http.createServer(async (req, res) => {
-    pipeResponse(await handleRequest(req), res);
+    if (req.url == null) {
+      res.statusCode = 400;
+      res.end("No url found");
+      return;
+    }
+    if (req.url === "/api/updates") {
+      sse.handleRequest(req, res);
+    } else if (req.url.startsWith("/api/")) {
+      api(req, res);
+    } else {
+      uiHandler(req, res);
+    }
   });
 
   server.listen(port);
@@ -74,6 +53,7 @@ export async function startServer(port: number) {
   return {
     stop() {
       server.close();
+      clearInterval(interval);
     },
   };
 }

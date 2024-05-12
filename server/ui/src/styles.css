@@ -1,3 +1,18 @@
 body {
-  background: red;
+  background: white;
+}
+
+.layout {
+  display: flex;
+  justify-content: stretch;
+  gap: 16px;
+}
+
+pre {
+  overflow-y: auto;
+  height: 50vh;
+}
+
+#preview {
+  width: 100%;
 }
