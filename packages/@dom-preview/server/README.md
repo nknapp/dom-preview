@@ -5,7 +5,7 @@ This is the server component of dom-preview
 # Usage
 
 ```ts
-import { runDomPreviewServer, DomPreview } from "@dom-preview/server";
+import { runDomPreviewServer, DomPreviewCreate } from "@dom-preview/server";
 
 // Put your frontend files into ./static-files
 const { shutdown } = await runDomPreviewServer({
@@ -38,6 +38,6 @@ await fetch("http://localhost:1234/previews", {
     html: document.documentElement.outerHTML, // e.g. `<html><body>Hello HTML: <input type="text"></body></html>`,
     inputValues: ["input field value"],
     timestamp: Date.now(),
-  } satisfies DomPreview),
+  } satisfies DomPreviewCreate),
 });
 ```

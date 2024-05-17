@@ -2,13 +2,16 @@ import { DomPreviewStore } from "../store/DomPreviewStore.js";
 import { ReqResHandler } from "./ReqResHandler.js";
 import { asReqResHandler } from "../utils/asReqResHandler.js";
 import { buffer } from "node:stream/consumers";
-import { DomPreviewValidator } from "../model/DomPreview.js";
+import {
+  DomPreviewCreate,
+  DomPreviewCreateModel,
+} from "../model/DomPreview.js";
 
 export function createPreviewsEndpoint(store: DomPreviewStore): ReqResHandler {
   return asReqResHandler(async (request) => {
     const body = await buffer(request);
     const parsedBody = JSON.parse(body.toString("utf-8"));
-    const validatedBody = DomPreviewValidator.safeParse(parsedBody);
+    const validatedBody = DomPreviewCreateModel.safeParse(parsedBody);
     if (!validatedBody.success) {
       return new Response(
         JSON.stringify({
@@ -19,7 +22,8 @@ export function createPreviewsEndpoint(store: DomPreviewStore): ReqResHandler {
       );
     }
 
-    store.addDomPreview(validatedBody.data);
+    const domPreview: DomPreviewCreate = validatedBody.data;
+    store.addDomPreview(domPreview);
     return new Response("", { status: 201 });
   });
 }

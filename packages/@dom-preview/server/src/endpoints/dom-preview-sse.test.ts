@@ -18,14 +18,14 @@ describe("update-sse", () => {
     const { capturedEvents: capturedEvents2 } =
       await createTestEventSource(baseUrl);
 
-    sse.previewAdded(createDomPreview({ alias: "test-preview" }));
+    sse.previewAdded(createDomPreview({ alias: "test-preview", id: "my-id" }));
 
     await waitFor(() => {
       expect(capturedEvents1).toContainEqual(
-        createDomPreview({ alias: "test-preview" }),
+        createDomPreview({ alias: "test-preview", id: "my-id" }),
       );
       expect(capturedEvents2).toContainEqual(
-        createDomPreview({ alias: "test-preview" }),
+        createDomPreview({ alias: "test-preview", id: "my-id" }),
       );
     });
   });

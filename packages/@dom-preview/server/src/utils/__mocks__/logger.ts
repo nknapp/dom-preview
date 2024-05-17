@@ -1,3 +1,5 @@
+/// <reference types="vite/client" />
+
 const MUTE_LOGGER = import.meta.env.MUTE_LOGGER === "true";
 
 export const logError = vi.fn(

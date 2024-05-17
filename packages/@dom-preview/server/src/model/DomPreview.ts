@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const DomPreviewValidator = z.object({
+export const DomPreviewCreateModel = z.object({
   timestamp: z.number(),
   context: z.string(),
   alias: z.optional(z.string()),
@@ -8,4 +8,9 @@ export const DomPreviewValidator = z.object({
   inputValues: z.array(z.string()),
 });
 
-export type DomPreview = z.TypeOf<typeof DomPreviewValidator>;
+export const DomPreviewReadModel = DomPreviewCreateModel.extend({
+  id: z.string(),
+});
+
+export type DomPreviewCreate = z.infer<typeof DomPreviewCreateModel>;
+export type DomPreview = z.infer<typeof DomPreviewReadModel>;

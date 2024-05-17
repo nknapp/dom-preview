@@ -1,6 +1,6 @@
-import { createTestServer } from "../test-utils/createTestServer";
+import { createTestServer } from "../test-utils/createTestServer.js";
 import { ServerResponse } from "node:http";
-import { pipeResponse } from "./pipeResponse";
+import { pipeResponse } from "./pipeResponse.js";
 
 describe("pipeResponse", () => {
   it("streams the body", async () => {

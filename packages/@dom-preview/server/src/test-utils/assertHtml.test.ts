@@ -29,7 +29,8 @@ describe("assertHtml", () => {
         "<html><body>Hello world</body></html>",
       );
       expect.fail("Precondition failed. No error was thrown");
-    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
       expect
         .soft(error.actual)
         .toEqual("<html>\n  <body>\n    Hello\n  </body>\n</html>\n");

@@ -12,6 +12,7 @@
   "scripts": {
     "test": "run-s test:*",
     "test:lint": "eslint",
+    "test:types": "tsc",
     "test:unit": "vitest run --watch=false",
     "dev": "run-p dev:*",
     "dev:unit": "vitest --ui",
@@ -22,6 +23,7 @@
   "license": "ISC",
   "devDependencies": {
     "@types/eventsource": "1.1.15",
+    "@types/nanoid": "3.0.0",
     "@vitest/ui": "1.6.0",
     "eventsource": "2.0.2",
     "jsdom": "24.0.0",

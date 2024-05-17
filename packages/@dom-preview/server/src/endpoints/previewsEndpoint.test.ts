@@ -18,6 +18,12 @@ describe("PreviewsEndpoint", async () => {
       ),
     });
     expect.soft(store.domPreviews).toHaveLength(1);
+    expect.soft(store.domPreviews[0]).toEqual(
+      createDomPreview({
+        id: expect.any(String),
+        html: "<html><body>PreviewsEndpointTest</body>",
+      }),
+    );
   });
 
   it("refuses an invalid preview json", async () => {

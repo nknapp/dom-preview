@@ -2,7 +2,7 @@ import { AddressInfo } from "node:net";
 
 import sirv from "sirv";
 
-export type { DomPreview } from "./model/DomPreview.js";
+export type { DomPreview, DomPreviewCreate } from "./model/DomPreview.js";
 
 export interface DomPreviewServerArgs {
   staticFilesDir: string;
@@ -53,7 +53,10 @@ export async function runDomPreviewServer({
   };
 }
 
-function getPort(address: string | AddressInfo) {
+function getPort(address: string | AddressInfo | null) {
+  if (address == null) {
+    throw new Error("Server address is null");
+  }
   if (typeof address === "string") {
     throw new Error(`Cannot determine port from :${address}`);
   }
