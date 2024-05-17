@@ -2,6 +2,8 @@ import { AddressInfo } from "node:net";
 
 import sirv from "sirv";
 
+export type { DomPreview } from "./model/DomPreview.js";
+
 export interface DomPreviewServerArgs {
   staticFilesDir: string;
   port: number;

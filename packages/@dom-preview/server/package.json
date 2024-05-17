@@ -32,9 +32,7 @@
     "run-p": "0.0.0",
     "sirv": "2.0.4",
     "typescript": "5.4.5",
-    "vitest": "1.6.0"
-  },
-  "dependencies": {
+    "vitest": "1.6.0",
     "zod": "3.23.8"
   }
 }
