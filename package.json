@@ -7,7 +7,10 @@
   "bin": {
     "dom-preview": "./dist/server/cli.cjs"
   },
-  "files": ["dist","ui/dist"],
+  "files": [
+    "dist",
+    "ui/dist"
+  ],
   "type": "module",
   "exports": {
     "require": {
@@ -64,6 +67,7 @@
     "vitest": "1.6.0"
   },
   "dependencies": {
+    "@fastify/static": "7.0.4",
     "sirv": "2.0.4",
     "tsx": "4.10.1"
   },
