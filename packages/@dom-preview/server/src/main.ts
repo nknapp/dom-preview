@@ -26,7 +26,13 @@ export async function runDomPreviewServer({
 }: DomPreviewServerArgs): Promise<DomPreviewServer> {
   const store = new DomPreviewStore();
   const serveStaticFiles = sirv(staticFilesDir);
-  const serverSideEvents = new DomPreviewSse();
+  const serverSideEvents = new DomPreviewSse({
+    onConnection: (req, res) => {
+      for (const domPreview of store.domPreviews) {
+        DomPreviewSse.writePreviewToResponse(domPreview, res);
+      }
+    },
+  });
   store.on("preview-added", (preview) => {
     serverSideEvents.previewAdded(preview);
   });

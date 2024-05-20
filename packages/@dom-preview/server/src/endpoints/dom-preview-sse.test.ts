@@ -1,11 +1,10 @@
 import { DomPreviewSse } from "./dom-preview-sse.js";
 import { createTestServer } from "../test-utils/createTestServer.js";
 import { createDomPreview } from "../model/DomPreview.test-helper.js";
-import { DomPreview } from "../model/DomPreview.js";
 import { waitFor } from "@testing-library/dom";
 import { delay } from "../test-utils/delay.js";
 
-import EventSource from "eventsource";
+import { createTestEventSource } from "../test-utils/createTestEventSource.js";
 
 describe("update-sse", () => {
   it("sends preview-added events to multiple clients", async () => {
@@ -42,16 +41,22 @@ describe("update-sse", () => {
     await delay(200);
     // if no error occurs so far, everything is fine
   });
+
+  it("calls callback on new connection", async () => {
+    const domPreview = createDomPreview({ alias: "test-preview" });
+    const sse = new DomPreviewSse({
+      onConnection: (req, res) => {
+        DomPreviewSse.writePreviewToResponse(domPreview, res);
+      },
+    });
+    const { baseUrl } = await createTestServer((req, res) => {
+      sse.handleRequest(req, res);
+    });
+    const { capturedEvents } = await createTestEventSource(baseUrl);
+    await waitFor(() => {
+      expect(capturedEvents).toEqual([domPreview]);
+    });
+  });
+
   it.todo("multiple connections");
 });
-
-async function createTestEventSource(baseUrl: string) {
-  const capturedEvents: DomPreview[] = [];
-  const eventSource = new EventSource(baseUrl);
-  eventSource.addEventListener("preview-added", (event) => {
-    capturedEvents.push(JSON.parse(event.data));
-  });
-  await new Promise((resolve) => eventSource.addEventListener("open", resolve));
-
-  return { capturedEvents, eventSource };
-}

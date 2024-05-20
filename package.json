@@ -11,19 +11,16 @@
     "packages/playground"
   ],
   "type": "module",
-  "exports": {
-    "require": {
-      "types": "./dist/index.d.cts",
-      "default": "./dist/index.cjs"
-    },
-    "import": {
-      "types": "./dist/index.d.mts",
-      "default": "./dist/index.mjs"
-    }
-  },
   "scripts": {
     "build": "npm run build --workspaces --if-present",
     "version": "node ./scripts/on-version-bump.js",
+    "play:build-dom-preview": "npm run build --workspace=packages/dom-preview -- --watch",
+    "play:build-ui": "npm run build --workspace=packages/@dom-preview/ui -- --watch",
+    "play:build-server": "npm run build --workspace=packages/@dom-preview/server -- --watch",
+    "play:run-server": "nodemon ./node_modules/.bin/dom-preview",
+    "play:playground": "npm run dev:unit --workspace=packages/playground",
+
+    "play": "run-p play:*",
     "prepare": "./scripts/on-prepare.sh",
     "postversion": "git push origin main --tags && npm publish"
   },
