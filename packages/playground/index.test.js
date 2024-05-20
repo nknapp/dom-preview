@@ -1,6 +1,7 @@
 import { createCounter } from "./index";
 import { userEvent } from "@testing-library/user-event";
 import { debug } from "dom-preview";
+import { screen } from "@testing-library/dom";
 
 describe("counter", () => {
   let user = null;
@@ -11,9 +12,19 @@ describe("counter", () => {
   it("adds", async () => {
     const counter = createCounter();
     document.body.append(counter);
-    await user.click(counter);
-
     debug();
-    expect(counter.textContent).toEqual("Count 1");
+    await user.click(counter);
+    debug();
+    await user.click(counter);
+    debug();
+    await user.click(counter);
+    debug();
+    await user.click(counter);
+    debug();
+    await user.click(counter);
+    debug();
+    await user.click(counter);
+    debug();
+    expect(counter.textContent).toEqual("Count 2");
   });
 });

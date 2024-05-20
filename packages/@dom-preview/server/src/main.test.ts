@@ -79,5 +79,6 @@ describe("main", () => {
     expect([...ids]).toHaveLength(totalIds);
   });
 
-  it("prints a info message after startup");
+  it.todo("prints a info message after startup");
+  it.todo("opens the browser");
 });

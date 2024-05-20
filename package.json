@@ -22,7 +22,7 @@
     }
   },
   "scripts": {
-    "build": "npm run build --workspaces",
+    "build": "npm run build --workspaces --if-present",
     "version": "node ./scripts/on-version-bump.js",
     "prepare": "./scripts/on-prepare.sh",
     "postversion": "git push origin main --tags && npm publish"

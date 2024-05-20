@@ -9,9 +9,17 @@ afterEach(() => {
   eventsEndpoint.clearConnections();
 });
 
-export function setupMswForTests() {
+export function setupMswForTests({ enableDebugLog = false } = {}) {
   const server = setupServer(...defaultMocks);
-
+  if (enableDebugLog) {
+    server.events.on("request:start", ({ request, requestId }) => {
+      console.log("request " + requestId, `${request.method} ${request.url}`);
+    });
+    server.events.on("response:mocked", async ({ response, requestId }) => {
+      console.log("response: " + requestId);
+      response.headers;
+    });
+  }
   server.listen();
   return {
     useRequestHandler(...handlers: RequestHandler[]) {
