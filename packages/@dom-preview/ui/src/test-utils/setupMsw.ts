@@ -11,11 +11,6 @@ afterEach(() => {
 
 export function setupMswForTests() {
   const server = setupServer(...defaultMocks);
-  server.events.on("request:unhandled", (event) => {
-    console.error(
-      `Unhandled request ${event.request.method} ${event.request.url}`,
-    );
-  });
 
   server.listen();
   return {

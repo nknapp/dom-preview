@@ -1,7 +1,5 @@
 <template>
-  <svg
-    width="1em"
-    height="1em"
+  <svg class="inline h-6"
     viewBox="0 0 17 17"
     xml:space="preserve"
     fill="currentColor"

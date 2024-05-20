@@ -1,18 +1,32 @@
 import { ref } from "vue";
 import { DomPreview } from "../model/DomPreview";
 
-export interface PreviewItem {
-  preview: DomPreview;
-  selected: boolean;
+export type Context = DomPreview[];
+
+export const domPreviews = ref<Record<string, Context>>({});
+
+export function upsertDomPreview(domPreview: DomPreview) {
+  const context = lazyGet(domPreviews.value, domPreview.context);
+  const index = context.findIndex((item) => item.id === domPreview.id);
+  if (index < 0) {
+    context.push(domPreview);
+  } else {
+    domPreviews.value[domPreview.context][index] = domPreview;
+  }
 }
 
-export const domPreviews = ref<Array<PreviewItem>>([]);
+export function getDomPreviewById(id: string): DomPreview | undefined {
+  const array = Object.values(domPreviews.value).flat();
+  return array.find((preview) => preview.id === id);
+}
 
-export const selectedPreview = ref<DomPreview>();
+export function clearPreviewStore() {
+  domPreviews.value = {};
+}
 
-export function addPreview(domPreview: DomPreview) {
-  domPreviews.value.push({
-    preview: domPreview,
-    selected: false,
-  });
+function lazyGet<K extends string, V>(object: Record<K, V[]>, key: K): V[] {
+  if (object[key] == null) {
+    object[key] = [];
+  }
+  return object[key];
 }
