@@ -1,10 +1,5 @@
 <script lang="ts" setup>
-import DomPreviewLogo from "./components/DomPreviewLogo.vue";
 import DefaultLayout from "./layout/DefaultLayout.vue";
-
-import "@shoelace-style/shoelace/dist/components/input/input.js";
-import "@shoelace-style/shoelace/dist/components/tree/tree.js";
-import "@shoelace-style/shoelace/dist/components/tree-item/tree-item.js";
 
 import { PreviewList } from "./components/PreviewList";
 import { ref } from "vue";

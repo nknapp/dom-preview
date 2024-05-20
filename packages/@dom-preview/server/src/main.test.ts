@@ -78,4 +78,6 @@ describe("main", () => {
     await messageReceived.promise;
     expect([...ids]).toHaveLength(totalIds);
   });
+
+  it("prints a info message after startup");
 });

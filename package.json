@@ -1,15 +1,14 @@
 {
-  "name": "dom-preview",
+  "name": "dom-preview-monorepo",
   "version": "0.1.1",
   "description": "A replacement for vitest-preview with more features.",
   "types": "./dist/index.d.cts",
   "module": "./dist/index.js",
-  "bin": {
-    "dom-preview": "./dist/server/cli.cjs"
-  },
-  "files": [
-    "dist",
-    "ui/dist"
+  "workspaces": [
+    "packages/@dom-preview/ui",
+    "packages/@dom-preview/server",
+    "packages/dom-preview",
+    "packages/playground"
   ],
   "type": "module",
   "exports": {
@@ -23,54 +22,13 @@
     }
   },
   "scripts": {
-    "test:lint": "eslint .",
-    "test:unit": "vitest run",
-    "test:types": "tsc --project tsconfig.json --noEmit",
-    "test": "run-s test:*",
-    "prebuild": "rm -rf dist",
-    "build:ui": "cd ui && vite build",
-    "build:ts": "pkgroll",
-    "build": "run-p build:*",
-    "format": "prettier -w .",
-    "dev:unit": "vitest --ui --clearScreen=false --reporter=dot",
-    "dev:server": "nodemon --exec vite-node src/server/cli.ts",
-    "dev:types": "tsc --project tsconfig.json --noEmit --watch",
-    "dev:ui": "cd ui && vite",
-    "dev": "run-p dev:*",
+    "build": "npm run build --workspaces",
     "version": "node ./scripts/on-version-bump.js",
     "prepare": "./scripts/on-prepare.sh",
     "postversion": "git push origin main --tags && npm publish"
   },
   "author": "Nils Knappmeier",
   "license": "MIT",
-  "devDependencies": {
-    "@eslint/js": "9.2.0",
-    "@testing-library/dom": "10.1.0",
-    "@testing-library/user-event": "14.5.2",
-    "@types/jsdom": "21.1.6",
-    "@types/node": "20.12.11",
-    "@vitest/ui": "1.6.0",
-    "eslint": "8.57.0",
-    "eventsource": "2.0.2",
-    "globals": "15.2.0",
-    "jsdom": "24.0.0",
-    "lint-staged": "15.2.2",
-    "lit-html": "3.1.3",
-    "nodemon": "3.1.0",
-    "npm-run-all": "4.1.5",
-    "pkgroll": "2.0.2",
-    "prettier": "3.2.5",
-    "typescript": "5.4.5",
-    "typescript-eslint": "7.8.0",
-    "vite": "5.2.11",
-    "vite-node": "1.6.0",
-    "vitest": "1.6.0"
-  },
-  "dependencies": {
-    "@fastify/static": "7.0.4",
-    "sirv": "2.0.4",
-    "tsx": "4.10.1"
-  },
   "lint-staged": {
     "*.{js,ts,css,md}": "prettier --write"
   }

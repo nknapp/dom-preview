@@ -1,7 +1,8 @@
 import { createApp } from "vue";
 import "./style.css";
 import "@shoelace-style/shoelace/dist/themes/light.css";
-import { setBasePath } from "@shoelace-style/shoelace";
+// @ts-expect-error Invalid exports definition in shoelace
+import { setBasePath } from "@shoelace-style/shoelace/dist/utilities/base-path";
 import App from "./App.vue";
 import { upsertDomPreview } from "./store/domPreviews.ts";
 import { createDomPreview } from "./model/DomPreview.test-helper.ts";

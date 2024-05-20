@@ -4,6 +4,7 @@
   "description": "",
   "type": "module",
   "main": "index.js",
+  "private": true,
   "scripts": {
     "dev": "run-p dev:*",
     "dev:unit": "vitest",
@@ -14,7 +15,7 @@
   "license": "ISC",
   "dependencies": {
     "@testing-library/dom": "10.1.0",
-    "dom-preview": "file:.."
+    "dom-preview": "0.1.2"
   },
   "devDependencies": {
     "jsdom": "24.0.0",

@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "target": "ES2016",
+    "moduleResolution": "Node",
+    "esModuleInterop": true,
+    "module": "ESNext",
+    "noEmit": true,
+    "strict": true,
+    "skipLibCheck": true,
+  },
+  "include": ["./src"],
+}

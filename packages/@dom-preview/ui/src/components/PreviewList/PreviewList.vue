@@ -28,7 +28,7 @@ import "@shoelace-style/shoelace/dist/components/tree/tree.js";
 import "@shoelace-style/shoelace/dist/components/tree-item/tree-item.js";
 import "@shoelace-style/shoelace/dist/components/badge/badge.js";
 
-import { SlTreeItem } from "@shoelace-style/shoelace";
+import type { SlTreeItem } from "@shoelace-style/shoelace";
 
 const emit = defineEmits<{
   (event: "update:modelValue", value: string): void;

@@ -1,0 +1,63 @@
+{
+  "name": "dom-preview",
+  "version": "0.1.2",
+  "description": "A replacement for vitest-preview with more features.",
+  "types": "./dist/index.d.cts",
+  "module": "./dist/index.js",
+  "bin": {
+    "dom-preview": "./dist/bin/server.cjs"
+  },
+  "files": [
+    "dist",
+    "ui/dist"
+  ],
+  "type": "module",
+  "exports": {
+    "require": {
+      "types": "./dist/index.d.cts",
+      "default": "./dist/index.cjs"
+    },
+    "import": {
+      "types": "./dist/index.d.mts",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "scripts": {
+    "test:lint": "eslint .",
+    "test:unit": "vitest run",
+    "test:types": "tsc --project tsconfig.json --noEmit",
+    "test": "run-s test:*",
+    "prebuild": "rm -rf dist",
+    "build": "pkgroll",
+    "format": "prettier -w .",
+    "dev:unit": "vitest --ui --clearScreen=false --reporter=dot",
+    "dev:server": "nodemon --exec vite-node src/server/cli.ts",
+    "dev:types": "tsc --project tsconfig.json --noEmit --watch",
+    "dev:ui": "cd ui && vite",
+    "dev": "run-p dev:*"
+  },
+  "author": "Nils Knappmeier",
+  "license": "MIT",
+  "dependencies": {
+    "@dom-preview/server": "0.0.1",
+    "@dom-preview/ui": "0.0.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.2.0",
+    "@testing-library/dom": "10.1.0",
+    "@testing-library/user-event": "14.5.2",
+    "@types/jsdom": "21.1.6",
+    "@types/node": "20.12.11",
+    "@vitest/ui": "1.6.0",
+    "eslint": "8.57.0",
+    "globals": "15.2.0",
+    "jsdom": "24.0.0",
+    "npm-run-all": "4.1.5",
+    "pkgroll": "2.0.2",
+    "typescript": "5.4.5",
+    "typescript-eslint": "7.8.0",
+    "vite": "5.2.11",
+    "vite-node": "1.6.0",
+    "vitest": "1.6.0"
+  }
+}
