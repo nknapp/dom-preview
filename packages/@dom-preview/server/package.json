@@ -15,6 +15,7 @@
     "test:types": "tsc",
     "test:unit": "vitest run --watch=false",
     "dev": "run-p dev:*",
+    "dev:server": "vite-node -w src/development/startDevApi.ts",
     "dev:unit": "vitest --ui",
     "build": "pkgroll"
   },
@@ -33,6 +34,7 @@
     "run-p": "0.0.0",
     "sirv": "2.0.4",
     "typescript": "5.4.5",
+    "vite-node": "1.6.0",
     "vitest": "1.6.0",
     "zod": "3.23.8"
   }
