@@ -14,12 +14,10 @@
   "scripts": {
     "build": "npm run build --workspaces --if-present",
     "version": "node ./scripts/on-version-bump.js",
-    "play:build-dom-preview": "npm run build --workspace=packages/dom-preview -- --watch",
-    "play:build-ui": "npm run build --workspace=packages/@dom-preview/ui -- --watch",
-    "play:build-server": "npm run build --workspace=packages/@dom-preview/server -- --watch",
-    "play:run-server": "nodemon ./node_modules/.bin/dom-preview",
+    "play:server": "npm run dev:server --workspace=packages/@dom-preview/server",
+    "play:ui": "npm run dev:server --workspace=packages/@dom-preview/ui",
+    "play:build": "npm run build --workspace=packages/dom-preview -- --watch",
     "play:playground": "npm run dev:unit --workspace=packages/playground",
-
     "play": "run-p play:*",
     "prepare": "./scripts/on-prepare.sh",
     "postversion": "git push origin main --tags && npm publish"
