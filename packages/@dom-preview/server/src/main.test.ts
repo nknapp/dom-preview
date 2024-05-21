@@ -112,13 +112,18 @@ describe("without static files dir", () => {
       port: 0,
     });
     port = server.port;
-    return async () => {
-      await server.shutdown();
+    return () => {
+      server.shutdown();
     };
   });
-  it("does not server static files", async () => {
-    const response = await fetch(`http://localhost:${port}/`);
+
+  it("return 404 with error message for static files", async () => {
+    const response = await fetch(`http://localhost:${port}/index.html`);
+    expect(response.status).toBe(404);
     const html = await response.text();
-    await assertHtml(html, "Static file delivery is disabled.");
+    await assertHtml(
+      html,
+      "Static file delivery is disabled. Not found: /index.html",
+    );
   });
 });

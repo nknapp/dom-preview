@@ -78,7 +78,8 @@ function createStaticFilesHandler(staticFilesDir: undefined | string) {
   const serveStaticFiles: ReqResHandler = staticFilesDir
     ? sirv(staticFilesDir)
     : (req, res) => {
-        res.end("Static file delivery is disabled.");
+        res.statusCode = 404;
+        res.end(`Static file delivery is disabled. Not found: ${req.url}`);
       };
   return serveStaticFiles;
 }
