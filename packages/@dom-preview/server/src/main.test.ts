@@ -104,3 +104,21 @@ describe("main", () => {
     });
   }
 });
+
+describe("without static files dir", () => {
+  let port = 0;
+  beforeEach(async () => {
+    const server = await runDomPreviewServer({
+      port: 0,
+    });
+    port = server.port;
+    return async () => {
+      await server.shutdown();
+    };
+  });
+  it("does not server static files", async () => {
+    const response = await fetch(`http://localhost:${port}/`);
+    const html = await response.text();
+    await assertHtml(html, "Static file delivery is disabled.");
+  });
+});

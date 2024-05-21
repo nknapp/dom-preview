@@ -1,12 +1,12 @@
 import { createTestServer } from "../test-utils/createTestServer.js";
-import { createPreviewsEndpoint } from "./previewsEndpoint.js";
+import { createPostPreviewsHandler } from "./createPostPreviewsHandler.js";
 import { DomPreviewStore } from "../store/DomPreviewStore.js";
 import { createDomPreview } from "../model/DomPreview.test-helper.js";
 
 describe("PreviewsEndpoint", async () => {
   it("stores a valid preview json", async () => {
     const store = new DomPreviewStore();
-    const previewsEndpoint = createPreviewsEndpoint(store);
+    const previewsEndpoint = createPostPreviewsHandler(store);
     const { fetchText } = await createTestServer(previewsEndpoint);
     await fetchText("/", {
       method: "POST",
@@ -28,7 +28,7 @@ describe("PreviewsEndpoint", async () => {
 
   it("refuses an invalid preview json", async () => {
     const store = new DomPreviewStore();
-    const previewsEndpoint = createPreviewsEndpoint(store);
+    const previewsEndpoint = createPostPreviewsHandler(store);
     const { fetchResponse } = await createTestServer(previewsEndpoint);
     const response = await fetchResponse("/", {
       method: "POST",

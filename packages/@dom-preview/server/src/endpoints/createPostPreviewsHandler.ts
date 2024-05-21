@@ -7,7 +7,9 @@ import {
   DomPreviewCreateModel,
 } from "../model/DomPreview.js";
 
-export function createPreviewsEndpoint(store: DomPreviewStore): ReqResHandler {
+export function createPostPreviewsHandler(
+  store: DomPreviewStore,
+): ReqResHandler {
   return asReqResHandler(async (request) => {
     const body = await buffer(request);
     const parsedBody = JSON.parse(body.toString("utf-8"));

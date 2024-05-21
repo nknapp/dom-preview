@@ -13,6 +13,7 @@ export class DomPreviewSse {
 
   constructor(options: DomPreviewSseOptions = {}) {
     this.options = options;
+    this.handleRequest = this.handleRequest.bind(this);
   }
 
   handleRequest(req: IncomingMessage, res: ServerResponse) {

@@ -1,4 +1,4 @@
-import { DomPreviewSse } from "./dom-preview-sse.js";
+import { DomPreviewSse } from "./DomPreviewSse.js";
 import { createTestServer } from "../test-utils/createTestServer.js";
 import { createDomPreview } from "../model/DomPreview.test-helper.js";
 import { waitFor } from "@testing-library/dom";

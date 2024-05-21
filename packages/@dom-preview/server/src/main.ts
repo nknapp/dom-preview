@@ -1,61 +1,54 @@
 import { AddressInfo } from "node:net";
 
 import sirv from "sirv";
+import { createServer } from "node:http";
+
+import { DomPreviewSse } from "./endpoints/DomPreviewSse.js";
+import { DomPreviewStore } from "./store/DomPreviewStore.js";
+import { createPostPreviewsHandler } from "./endpoints/createPostPreviewsHandler.js";
+import { ReqResHandler } from "./utils/asReqResHandler.js";
 
 export type { DomPreview, DomPreviewCreate } from "./model/DomPreview.js";
 
 export interface DomPreviewServerArgs {
-  staticFilesDir: string;
+  staticFilesDir?: string;
   port: number;
 }
 
 export interface DomPreviewServer {
-  shutdown(): Promise<void>;
+  shutdown(): void;
   port: number;
 }
-
-import { createServer } from "node:http";
-
-import { DomPreviewSse } from "./endpoints/dom-preview-sse.js";
-import { DomPreviewStore } from "./store/DomPreviewStore.js";
-import { createPreviewsEndpoint } from "./endpoints/previewsEndpoint.js";
 
 export async function runDomPreviewServer({
   port,
   staticFilesDir,
 }: DomPreviewServerArgs): Promise<DomPreviewServer> {
+  const startTime = new Date().toISOString();
   const store = new DomPreviewStore();
-  const serveStaticFiles = sirv(staticFilesDir);
-  const serverSideEvents = new DomPreviewSse({
-    onConnection: (req, res) => {
-      for (const domPreview of store.domPreviews) {
-        DomPreviewSse.writePreviewToResponse(domPreview, res);
-      }
-    },
-  });
-  store.on("preview-added", (preview) => {
-    serverSideEvents.previewAdded(preview);
-  });
-  const previewsHandler = createPreviewsEndpoint(store);
-  const server = createServer((req, res) => {
-    const methodPath = req.method + " " + req.url;
-    if (methodPath === "GET /events") {
-      return serverSideEvents.handleRequest(req, res);
-    }
-    if (methodPath === "POST /previews") {
-      previewsHandler(req, res);
-    } else {
-      return serveStaticFiles(req, res);
-    }
-  });
-  server.listen(port);
-  const actualPort = getPort(server.address());
+  const serverSideEvents = createPreviewStreamHandler(store);
+  const server = createServer(
+    createSimpleRouter({
+      "GET /events": serverSideEvents.handleRequest,
+      "POST /previews": createPostPreviewsHandler(store),
+      "GET /health": (req, res) => {
+        res.end(
+          JSON.stringify({
+            started: startTime,
+          }),
+        );
+      },
+      "*": createStaticFilesHandler(staticFilesDir),
+    }),
+  );
 
+  server.listen(port);
   return {
-    async shutdown(): Promise<void> {
+    shutdown(): void {
+      console.log("Closing server");
       server.close();
     },
-    port: actualPort,
+    port: getPort(server.address()),
   };
 }
 
@@ -67,4 +60,39 @@ function getPort(address: string | AddressInfo | null) {
     throw new Error(`Cannot determine port from :${address}`);
   }
   return address.port;
+}
+
+type Method = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+type Route = `${Method} /${string}`;
+type EndPoints = Record<Route | "*", ReqResHandler>;
+
+function createSimpleRouter(endpoints: EndPoints): ReqResHandler {
+  return (req, res) => {
+    const methodAndPath = `${req.method} ${req.url}` as Route;
+    const handler = endpoints[methodAndPath] ?? endpoints["*"];
+    handler(req, res);
+  };
+}
+
+function createStaticFilesHandler(staticFilesDir: undefined | string) {
+  const serveStaticFiles: ReqResHandler = staticFilesDir
+    ? sirv(staticFilesDir)
+    : (req, res) => {
+        res.end("Static file delivery is disabled.");
+      };
+  return serveStaticFiles;
+}
+
+function createPreviewStreamHandler(store: DomPreviewStore) {
+  const serverSideEvents = new DomPreviewSse({
+    onConnection: (req, res) => {
+      for (const domPreview of store.domPreviews) {
+        DomPreviewSse.writePreviewToResponse(domPreview, res);
+      }
+    },
+  });
+  store.on("preview-added", (preview) => {
+    serverSideEvents.previewAdded(preview);
+  });
+  return serverSideEvents;
 }
