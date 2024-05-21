@@ -1,8 +1,8 @@
-import { domPreviewLiveUpdate } from "./events";
-import { afterTest } from "../test-utils/afterTest";
-import { domPreviews } from "../store/domPreviews";
-import { eventsEndpoint, setupMswForTests } from "../test-utils/setupMsw";
-import { createDomPreview } from "../model/DomPreview.test-helper";
+import { domPreviewLiveUpdate } from "./stream-previews.ts";
+import { afterTest } from "@/test-utils/afterTest";
+import { domPreviews } from "@/store/domPreviews";
+import { eventsEndpoint, setupMswForTests } from "@/test-utils/setupMsw";
+import { createDomPreview } from "@/model/DomPreview.test-helper";
 import { waitFor } from "@testing-library/dom";
 
 setupMswForTests();

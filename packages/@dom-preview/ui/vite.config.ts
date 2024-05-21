@@ -22,6 +22,16 @@ export default defineConfig({
       },
     }),
   ],
+  resolve: {
+    alias: {
+      "@/": "/src/",
+    },
+  },
+  server: {
+    proxy: {
+      "/api": "http://localhost:1234/",
+    },
+  },
   test: {
     globals: true,
     environment: "jsdom",

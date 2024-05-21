@@ -1,10 +1,10 @@
-import { renderToDom } from "../../test-utils/renderToDom";
+import { renderToDom } from "@/test-utils/renderToDom";
 import PreviewList from "./PreviewList.vue";
-import { upsertDomPreview } from "../../store/domPreviews";
-import { createDomPreview } from "../../model/DomPreview.test-helper";
-import { dom } from "../../test-utils/dom";
+import { upsertDomPreview } from "@/store/domPreviews";
+import { createDomPreview } from "@/model/DomPreview.test-helper";
+import { dom } from "@/test-utils/dom";
 import { within } from "@testing-library/dom";
-import { user } from "../../test-utils/user.ts";
+import { user } from "@/test-utils/user.ts";
 
 describe("Preview", () => {
   function renderComponent() {

@@ -1,5 +1,5 @@
 import { ref } from "vue";
-import { DomPreview } from "../model/DomPreview";
+import { DomPreview } from "@/model/DomPreview";
 
 export type Context = DomPreview[];
 

@@ -1,6 +1,7 @@
 import { setupServer } from "msw/node";
 import { RequestHandler } from "msw";
-import { mockEventsEndpoint } from "../api/events.mock.test-helper.ts";
+import { mockEventsEndpoint } from "@/api/stream/previews/stream-previews.mock.test-helper";
+import { logInfo } from "@/utils/logger";
 
 export const eventsEndpoint = mockEventsEndpoint();
 const defaultMocks: RequestHandler[] = [eventsEndpoint.handler];
@@ -13,11 +14,10 @@ export function setupMswForTests({ enableDebugLog = false } = {}) {
   const server = setupServer(...defaultMocks);
   if (enableDebugLog) {
     server.events.on("request:start", ({ request, requestId }) => {
-      console.log("request " + requestId, `${request.method} ${request.url}`);
+      logInfo("request " + requestId, `${request.method} ${request.url}`);
     });
     server.events.on("response:mocked", async ({ response, requestId }) => {
-      console.log("response: " + requestId);
-      response.headers;
+      logInfo("response: " + requestId, response.headers);
     });
   }
   server.listen();

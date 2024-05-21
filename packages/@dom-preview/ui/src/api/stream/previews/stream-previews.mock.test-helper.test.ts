@@ -1,7 +1,7 @@
 import { describe } from "vitest";
-import { eventsEndpoint, setupMswForTests } from "../test-utils/setupMsw.ts";
-import { DomPreview } from "../model/DomPreview.ts";
-import { createDomPreview } from "../model/DomPreview.test-helper.ts";
+import { eventsEndpoint, setupMswForTests } from "@/test-utils/setupMsw";
+import { DomPreview } from "@/model/DomPreview";
+import { createDomPreview } from "@/model/DomPreview.test-helper";
 import { waitFor } from "@testing-library/dom";
 
 setupMswForTests();
@@ -9,7 +9,10 @@ setupMswForTests();
 describe("eventsMock", () => {
   it("emits sse events", async () => {
     const sink: DomPreview[] = [];
-    const eventSourceURL = new URL("/events", window.location.href);
+    const eventSourceURL = new URL(
+      "/api/stream/previews",
+      window.location.href,
+    );
     const eventSource = new EventSource(eventSourceURL.href);
     eventSource.addEventListener("preview-added", (event) => {
       sink.push(event.data);

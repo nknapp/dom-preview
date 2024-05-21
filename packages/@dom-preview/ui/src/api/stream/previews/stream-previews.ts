@@ -1,8 +1,8 @@
-import { upsertDomPreview } from "../store/domPreviews";
+import { upsertDomPreview } from "@/store/domPreviews";
 import { DomPreview } from "@dom-preview/server";
 
 export async function domPreviewLiveUpdate() {
-  const eventSourceURL = new URL("/events", window.location.href);
+  const eventSourceURL = new URL("/api/stream/previews", window.location.href);
   const eventSource = new EventSource(eventSourceURL.href);
   eventSource.addEventListener("preview-added", (event) => {
     const domPreview = JSON.parse(event.data) as DomPreview;

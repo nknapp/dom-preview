@@ -22,7 +22,7 @@
   </sl-tree>
 </template>
 <script setup lang="ts">
-import { domPreviews } from "../../store/domPreviews.ts";
+import { domPreviews } from "@/store/domPreviews.ts";
 
 import "@shoelace-style/shoelace/dist/components/tree/tree.js";
 import "@shoelace-style/shoelace/dist/components/tree-item/tree-item.js";

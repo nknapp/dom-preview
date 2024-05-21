@@ -7,6 +7,7 @@ import { DomPreviewSse } from "./endpoints/DomPreviewSse.js";
 import { DomPreviewStore } from "./store/DomPreviewStore.js";
 import { createPostPreviewsHandler } from "./endpoints/createPostPreviewsHandler.js";
 import { ReqResHandler } from "./utils/asReqResHandler.js";
+import { createSimpleRouter } from "./endpoints/router.js";
 
 export type { DomPreview, DomPreviewCreate } from "./model/DomPreview.js";
 
@@ -24,20 +25,12 @@ export async function runDomPreviewServer({
   port,
   staticFilesDir,
 }: DomPreviewServerArgs): Promise<DomPreviewServer> {
-  const startTime = new Date().toISOString();
   const store = new DomPreviewStore();
   const serverSideEvents = createPreviewStreamHandler(store);
   const server = createServer(
     createSimpleRouter({
-      "GET /events": serverSideEvents.handleRequest,
-      "POST /previews": createPostPreviewsHandler(store),
-      "GET /health": (req, res) => {
-        res.end(
-          JSON.stringify({
-            started: startTime,
-          }),
-        );
-      },
+      "GET /api/stream/previews": serverSideEvents.handleRequest,
+      "POST /api/previews": createPostPreviewsHandler(store),
       "*": createStaticFilesHandler(staticFilesDir),
     }),
   );
@@ -60,18 +53,6 @@ function getPort(address: string | AddressInfo | null) {
     throw new Error(`Cannot determine port from :${address}`);
   }
   return address.port;
-}
-
-type Method = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
-type Route = `${Method} /${string}`;
-type EndPoints = Record<Route | "*", ReqResHandler>;
-
-function createSimpleRouter(endpoints: EndPoints): ReqResHandler {
-  return (req, res) => {
-    const methodAndPath = `${req.method} ${req.url}` as Route;
-    const handler = endpoints[methodAndPath] ?? endpoints["*"];
-    handler(req, res);
-  };
 }
 
 function createStaticFilesHandler(staticFilesDir: undefined | string) {

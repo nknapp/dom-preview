@@ -11,5 +11,5 @@
   </div>
 </template>
 <script setup lang="ts">
-import DomPreviewLogo from "../components/DomPreviewLogo.vue";
+import DomPreviewLogo from "@/components/DomPreviewLogo.vue";
 </script>

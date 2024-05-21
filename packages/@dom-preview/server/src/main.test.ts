@@ -18,8 +18,8 @@ describe("main", () => {
       staticFilesDir: path.resolve(import.meta.dirname, "main.test.resources"),
     });
     port = server.port;
-    return async () => {
-      await server.shutdown();
+    return () => {
+      server.shutdown();
     };
   });
 
@@ -31,7 +31,7 @@ describe("main", () => {
 
   it("'events'-endpoint delivers added dom-previews ", async () => {
     const { capturedEvents } = await createTestEventSource(
-      `http://localhost:${port}/events`,
+      `http://localhost:${port}/api/stream/previews`,
     );
     await postDomPreview({
       html: "<html><body>Hello Main</body>",
@@ -52,7 +52,9 @@ describe("main", () => {
     let pendingIds = totalIds;
     const messageReceived = promiseWithResolvers<void>();
 
-    const eventSource = new EventSource(`http://localhost:${port}/events`);
+    const eventSource = new EventSource(
+      `http://localhost:${port}/api/stream/previews`,
+    );
     eventSource.addEventListener("preview-added", (preview) => {
       ids.add(JSON.parse(preview.data).id);
       pendingIds--;
@@ -78,7 +80,7 @@ describe("main", () => {
       html: "<html><body>Hello Main 2</body>",
     });
     const { capturedEvents, eventSource } = await createTestEventSource(
-      `http://localhost:${port}/events`,
+      `http://localhost:${port}/api/stream/previews`,
     );
     await waitFor(() => {
       expect(capturedEvents).toEqual([
@@ -98,7 +100,7 @@ describe("main", () => {
   it.todo("opens the browser");
 
   async function postDomPreview(partial: Partial<DomPreviewCreate>) {
-    await fetch(`http://localhost:${port}/previews`, {
+    await fetch(`http://localhost:${port}/api/previews`, {
       method: "POST",
       body: JSON.stringify(createDomPreviewCreate(partial)),
     });

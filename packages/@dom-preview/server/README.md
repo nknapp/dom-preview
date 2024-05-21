@@ -21,7 +21,9 @@ process.on("SIGINT", () => {
 In the browser:
 
 ```typescript
-const eventSource = new EventSource("http://localhost:1234/events");
+const eventSource = new EventSource(
+  "http://localhost:1234/api/stream/previews",
+);
 eventSource.addEventListener("preview-added", (event) => {
   console.log(JSON.parse(event.data));
 });

@@ -1,5 +1,5 @@
 import { http, HttpResponse, RequestHandler } from "msw";
-import { DomPreview } from "../model/DomPreview.ts";
+import { DomPreview } from "@/model/DomPreview.ts";
 import { waitFor } from "@testing-library/dom";
 
 const encoder = new TextEncoder();
@@ -15,22 +15,25 @@ export interface MockEventsEndpointReturn {
 export function mockEventsEndpoint(): MockEventsEndpointReturn {
   const streamControllers = new Set<ReadableStreamDefaultController>();
 
-  const handler = http.get("http://localhost/events", ({ request }) => {
-    const stream = new ReadableStream({
-      start(streamController) {
-        streamControllers.add(streamController);
-        request.signal.addEventListener("abort", () => {
-          streamControllers.delete(streamController);
-        });
-      },
-    });
-    return new HttpResponse(stream, {
-      headers: {
-        "X-Accel-Buffering": "no",
-        "Content-Type": "text/event-stream",
-      },
-    });
-  });
+  const handler = http.get(
+    "http://localhost/api/stream/previews",
+    ({ request }) => {
+      const stream = new ReadableStream({
+        start(streamController) {
+          streamControllers.add(streamController);
+          request.signal.addEventListener("abort", () => {
+            streamControllers.delete(streamController);
+          });
+        },
+      });
+      return new HttpResponse(stream, {
+        headers: {
+          "X-Accel-Buffering": "no",
+          "Content-Type": "text/event-stream",
+        },
+      });
+    },
+  );
 
   function nrConnections(): number {
     return streamControllers.size;

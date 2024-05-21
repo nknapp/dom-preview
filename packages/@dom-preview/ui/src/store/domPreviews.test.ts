@@ -4,10 +4,10 @@ import {
   domPreviews,
   getDomPreviewById,
 } from "./domPreviews.ts";
-import { createDomPreview } from "../model/DomPreview.test-helper.ts";
+import { createDomPreview } from "@/model/DomPreview.test-helper.ts";
 import { beforeEach } from "vitest";
 import { nextTick } from "vue";
-import { logChanges } from "../test-utils/logChanges.ts";
+import { logChanges } from "@/test-utils/logChanges.ts";
 
 describe("domPreview", () => {
   beforeEach(() => {

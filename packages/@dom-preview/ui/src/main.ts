@@ -4,9 +4,10 @@ import "@shoelace-style/shoelace/dist/themes/light.css";
 // @ts-expect-error Invalid exports definition in shoelace
 import { setBasePath } from "@shoelace-style/shoelace/dist/utilities/base-path";
 import App from "./App.vue";
-import { upsertDomPreview } from "./store/domPreviews.ts";
-import { createDomPreview } from "./model/DomPreview.test-helper.ts";
-import { domPreviewLiveUpdate } from "./api/events.ts";
+import { upsertDomPreview } from "./store/domPreviews";
+import { createDomPreview } from "./model/DomPreview.test-helper";
+import { domPreviewLiveUpdate } from "./api/stream/previews/stream-previews";
+import { logError } from "@/utils/logger";
 
 setBasePath(
   "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.15.0/cdn/",
@@ -14,7 +15,7 @@ setBasePath(
 
 createApp(App).mount("#app");
 
-domPreviewLiveUpdate().catch(console.error);
+domPreviewLiveUpdate().catch(logError);
 
 if (import.meta.env.DEV) {
   for (let i = 0; i < 5; i++) {
