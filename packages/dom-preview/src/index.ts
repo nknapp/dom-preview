@@ -11,7 +11,7 @@ function hydrate(inputValues: string[]) {
 export function debug(): void {
   // TODO: Tests  missing
   console.log("debug");
-  fetch("http://localhost:1234/previews", {
+  fetch("http://localhost:1234/api/previews", {
     method: "POST",
     body: JSON.stringify({
       html: document.documentElement.outerHTML,
