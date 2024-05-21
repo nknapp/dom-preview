@@ -1,5 +1,4 @@
-import { runDomPreviewServer, DomPreview } from "../src/main.js";
-import { DomPreviewCreate } from "../src/model/DomPreview.js";
+import { runDomPreviewServer, type DomPreviewCreate } from "../src/main.js";
 
 // Put your frontend files into ./static-files
 const { shutdown } = await runDomPreviewServer({
@@ -8,7 +7,7 @@ const { shutdown } = await runDomPreviewServer({
 });
 
 process.on("SIGINT", () => {
-  shutdown().catch(console.error);
+  shutdown();
 });
 
 // In the browser:
