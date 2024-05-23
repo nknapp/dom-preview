@@ -8,6 +8,7 @@ import { clearPreviewStore } from "./store/domPreviews.ts";
 beforeEach(() => {
   document.body.innerHTML = "";
   clearPreviewStore();
+  history.pushState("", "", "/");
 });
 
 setBasePath("./node_modules/@shoelace-style/shoelace/cdn/");

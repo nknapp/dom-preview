@@ -1,8 +1,9 @@
 import {
-  upsertDomPreview,
   clearPreviewStore,
   domPreviews,
   getDomPreviewById,
+  lastAddedPreviewId,
+  upsertDomPreview,
 } from "./domPreviews.ts";
 import { createDomPreview } from "@/model/DomPreview.test-helper.ts";
 import { beforeEach } from "vitest";
@@ -34,6 +35,35 @@ describe("domPreview", () => {
 
     expect(domPreviews.value["context1"][0]).toEqual(domPreview1);
     expect(domPreviews.value["context2"][0]).toEqual(domPreview2);
+  });
+
+  it("updates the last-added ref", () => {
+    upsertDomPreview(
+      createDomPreview({
+        id: "preview1",
+        timestamp: 1000,
+        context: "context1",
+      }),
+    );
+    expect.soft(lastAddedPreviewId.value).toEqual("preview1");
+
+    upsertDomPreview(
+      createDomPreview({
+        id: "preview2",
+        timestamp: 2000,
+        context: "context2",
+      }),
+    );
+    expect.soft(lastAddedPreviewId.value).toEqual("preview2");
+
+    upsertDomPreview(
+      createDomPreview({
+        id: "preview3",
+        timestamp: 2000,
+        context: "context1",
+      }),
+    );
+    expect.soft(lastAddedPreviewId.value).toEqual("preview3");
   });
 
   it("adds new previews into an existing context without removing old previews", () => {

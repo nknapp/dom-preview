@@ -4,8 +4,10 @@ import { DomPreview } from "@/model/DomPreview";
 export type Context = DomPreview[];
 
 export const domPreviews = ref<Record<string, Context>>({});
+export const lastAddedPreviewId = ref<string | null>(null);
 
 export function upsertDomPreview(domPreview: DomPreview) {
+  lastAddedPreviewId.value = domPreview.id;
   const context = lazyGet(domPreviews.value, domPreview.context);
   const index = context.findIndex((item) => item.id === domPreview.id);
   if (index < 0) {
@@ -15,9 +17,9 @@ export function upsertDomPreview(domPreview: DomPreview) {
   }
 }
 
-export function getDomPreviewById(id: string): DomPreview | undefined {
+export function getDomPreviewById(id: string): DomPreview | null {
   const array = Object.values(domPreviews.value).flat();
-  return array.find((preview) => preview.id === id);
+  return array.find((preview) => preview.id === id) ?? null;
 }
 
 export function clearPreviewStore() {
