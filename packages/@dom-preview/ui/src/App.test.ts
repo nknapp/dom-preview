@@ -5,6 +5,7 @@ import { createDomPreview } from "@/model/DomPreview.test-helper.ts";
 import { waitFor } from "@testing-library/dom";
 import { upsertDomPreview } from "@/store/domPreviews.ts";
 import { user } from "@/test-utils/user.ts";
+import { debugInPlayMode } from "@/test-utils/debugInPlayMode.ts";
 
 describe("App", () => {
   it("renders the title", async () => {
@@ -99,6 +100,7 @@ describe("App", () => {
         html: "<div>Hello 1</div>",
       }),
     );
+    debugInPlayMode("alias1");
     upsertDomPreview(
       createDomPreview({
         id: "preview2",
@@ -107,6 +109,7 @@ describe("App", () => {
     );
 
     await user.click(await dom.findByText("Preview 1"));
+    debugInPlayMode("alias3");
     expect(document.location.search).toEqual("?dom-preview=preview1");
   });
 

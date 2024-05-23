@@ -4,7 +4,6 @@ import "@shoelace-style/shoelace/dist/components/tree-item/tree-item.js";
 import type { SlTreeItem } from "@shoelace-style/shoelace";
 import { DomPreview } from "@/model/DomPreview";
 import { computed } from "vue";
-import { preview } from "vite";
 
 const props = defineProps<{
   preview: DomPreview;
@@ -19,6 +18,7 @@ const label = computed(() => {
 
 <template>
   <sl-tree-item
+    :class="truncate"
     :data-preview-id="props.preview.id"
     :key="props.preview.id"
     :selected="props.selected"

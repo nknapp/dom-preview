@@ -34,7 +34,7 @@ describe("Preview", () => {
     renderComponent();
     upsertDomPreview(createDomPreview({ context: "initial" }));
     upsertDomPreview(createDomPreview({ context: "initial" }));
-    const treeItem = await dom.findByText("initial", { exact: false });
+    const treeItem = await dom.findByRole("treeitem", { name: /initial/ });
     expect(
       within(treeItem).getByTestId("previewlist-counter"),
     ).toHaveTextContent("2");
