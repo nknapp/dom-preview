@@ -4,7 +4,6 @@ import { dom } from "./test-utils/dom.ts";
 import { createDomPreview } from "@/model/DomPreview.test-helper.ts";
 import { waitFor } from "@testing-library/dom";
 import { upsertDomPreview } from "@/store/domPreviews.ts";
-import { debugInPlayMode } from "@/test-utils/debugInPlayMode.ts";
 import { user } from "@/test-utils/user.ts";
 
 describe("App", () => {
@@ -84,7 +83,6 @@ describe("App", () => {
       "<div>Hello 3</div>",
     );
 
-    debugInPlayMode();
     // TODO: search for alias
     expect(
       await dom.findByRole("treeitem", { name: "Preview 2" }),
