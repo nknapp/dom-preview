@@ -1,5 +1,5 @@
 import { upsertDomPreview } from "@/store/domPreviews";
-import { DomPreview } from "@dom-preview/server";
+import { DomPreview } from "@/model/DomPreview";
 
 export async function domPreviewLiveUpdate() {
   const eventSourceURL = new URL("/api/stream/previews", window.location.href);

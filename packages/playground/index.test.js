@@ -13,6 +13,7 @@ describe("counter", () => {
     const counter = createCounter();
     document.body.append(counter);
     debug();
+
     await user.click(counter);
     debug();
     await user.click(counter);
