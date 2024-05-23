@@ -1,14 +1,17 @@
 import { renderToDom } from "@/test-utils/renderToDom";
-import PreviewList from "./PreviewList.vue";
 import { upsertDomPreview } from "@/store/domPreviews";
 import { createDomPreview } from "@/model/DomPreview.test-helper";
 import { dom } from "@/test-utils/dom";
 import { within } from "@testing-library/dom";
 import { user } from "@/test-utils/user.ts";
+import PreviewList from "./PreviewList.vue";
+import { PreviewListProps } from "./PreviewList.vue";
 
 describe("Preview", () => {
-  function renderComponent() {
-    return renderToDom(PreviewList, { props: {} });
+  function renderComponent({
+    modelValue = null,
+  }: Partial<PreviewListProps> = {}) {
+    return renderToDom(PreviewList, { props: { modelValue } });
   }
 
   it("renders contexts", async () => {
@@ -37,7 +40,16 @@ describe("Preview", () => {
     ).toHaveTextContent("2");
   });
 
-  it("selectes a clicked preview item", async () => {
+  it("initially selects the preview identified via value", async () => {
+    upsertDomPreview(createDomPreview({ id: "preview1" }));
+    upsertDomPreview(createDomPreview({ id: "preview2" }));
+    upsertDomPreview(createDomPreview({ id: "preview3" }));
+    renderComponent({ modelValue: "preview2" });
+    const treeItem = await dom.findByRole("treeitem", { name: "Preview 2" });
+    expect(treeItem.getAttribute("aria-selected")).toBe("true");
+  });
+
+  it("selects a clicked preview item", async () => {
     renderComponent();
     upsertDomPreview(createDomPreview({ context: "initial", html: "hmtml1" }));
     upsertDomPreview(createDomPreview({ context: "initial" }));

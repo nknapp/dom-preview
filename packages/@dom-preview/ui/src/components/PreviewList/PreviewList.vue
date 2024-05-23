@@ -1,8 +1,11 @@
 <template>
-  <sl-tree selection="single" @sl-selection-change="onSelectItem">
+  <sl-tree selection="single" @sl-selection-change="onSelectItem" ref="tree">
     <sl-tree-item
-      v-for="previewContext in Object.keys(domPreviews)"
+      v-for="[previewContext, previewItems] in Object.entries(domPreviews)"
       :key="previewContext"
+      :expanded="
+        previewItems.some((preview) => preview.id === props.modelValue)
+      "
       >{{ previewContext }}
       <sl-badge
         data-testid="previewlist-counter"
@@ -15,6 +18,7 @@
         :data-preview-id="preview.id"
         v-for="(preview, index) in domPreviews[previewContext]"
         :key="preview.id"
+        :selected="modelValue === preview.id"
       >
         Preview {{ index + 1 }}
       </sl-tree-item>
@@ -28,7 +32,15 @@ import "@shoelace-style/shoelace/dist/components/tree/tree.js";
 import "@shoelace-style/shoelace/dist/components/tree-item/tree-item.js";
 import "@shoelace-style/shoelace/dist/components/badge/badge.js";
 
-import type { SlTreeItem } from "@shoelace-style/shoelace";
+import type { SlTree, SlTreeItem } from "@shoelace-style/shoelace";
+import { ref } from "vue";
+
+export interface PreviewListProps {
+  modelValue: string | null;
+}
+const props = defineProps<PreviewListProps>();
+
+const tree = ref<SlTree | null>(null);
 
 const emit = defineEmits<{
   (event: "update:modelValue", value: string): void;
