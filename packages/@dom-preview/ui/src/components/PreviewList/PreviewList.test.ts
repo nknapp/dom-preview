@@ -79,4 +79,16 @@ describe("Preview", () => {
     await user.click(treeItem);
     expect(wrapper.emitted("update:modelValue")).toEqual([["my-preview1"]]);
   });
+
+  it("renders the alias, if provided", async () => {
+    renderComponent();
+    const preview1 = createDomPreview({
+      id: "my-preview1",
+      alias: "my alias",
+      context: "initial",
+      html: "hmtml1",
+    });
+    upsertDomPreview(preview1);
+    expect(await dom.findByText("my alias")).not.toBeNull();
+  });
 });

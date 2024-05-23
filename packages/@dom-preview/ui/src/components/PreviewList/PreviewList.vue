@@ -14,14 +14,13 @@
         class="ms-2"
         >{{ domPreviews[previewContext].length }}</sl-badge
       >
-      <sl-tree-item
-        :data-preview-id="preview.id"
+      <PreviewItem
         v-for="(preview, index) in domPreviews[previewContext]"
         :key="preview.id"
+        :preview="preview"
+        :index="index"
         :selected="modelValue === preview.id"
-      >
-        Preview {{ index + 1 }}
-      </sl-tree-item>
+      />
     </sl-tree-item>
   </sl-tree>
 </template>
@@ -34,6 +33,7 @@ import "@shoelace-style/shoelace/dist/components/badge/badge.js";
 
 import type { SlTree, SlTreeItem } from "@shoelace-style/shoelace";
 import { ref } from "vue";
+import PreviewItem from "@/components/PreviewList/PreviewItem.vue";
 
 export interface PreviewListProps {
   modelValue: string | null;

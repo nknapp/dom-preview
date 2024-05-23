@@ -83,9 +83,8 @@ describe("App", () => {
       "<div>Hello 3</div>",
     );
 
-    // TODO: search for alias
     expect(
-      await dom.findByRole("treeitem", { name: "Preview 2" }),
+      await dom.findByRole("treeitem", { name: "Last Preview" }),
     ).toHaveProperty("selected", true);
     expect(
       await dom.findByRole("treeitem", { name: /context1/ }),
