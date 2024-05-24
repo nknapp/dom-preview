@@ -8,6 +8,7 @@ import { DomPreviewStore } from "./store/DomPreviewStore.js";
 import { createPostPreviewsHandler } from "./endpoints/createPostPreviewsHandler.js";
 import { ReqResHandler } from "./utils/asReqResHandler.js";
 import { createSimpleRouter } from "./endpoints/router.js";
+import { logInfo } from "./utils/logger.js";
 
 export type { DomPreview, DomPreviewCreate } from "./model/DomPreview.js";
 
@@ -38,7 +39,7 @@ export async function runDomPreviewServer({
   server.listen(port);
   return {
     shutdown(): void {
-      console.log("Closing server");
+      logInfo("Closing server");
       server.close();
     },
     port: getPort(server.address()),

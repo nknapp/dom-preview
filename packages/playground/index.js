@@ -12,7 +12,6 @@ export function createCounter() {
   button.addEventListener("click", () => {
     counter++;
     setButtonLabel();
-    console.log(button.textContent);
   });
   return button;
 }

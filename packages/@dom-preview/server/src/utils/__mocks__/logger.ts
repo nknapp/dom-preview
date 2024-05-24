@@ -1,4 +1,5 @@
 /// <reference types="vite/client" />
+/* eslint-disable no-console */
 
 const MUTE_LOGGER = import.meta.env.MUTE_LOGGER === "true";
 

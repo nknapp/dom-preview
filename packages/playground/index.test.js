@@ -1,7 +1,6 @@
 import { createCounter } from "./index";
 import { userEvent } from "@testing-library/user-event";
 import { debug } from "dom-preview";
-import { screen } from "@testing-library/dom";
 
 describe("counter", () => {
   let user = null;

@@ -1,9 +1,10 @@
 import { gatherInputValues } from "./helpers/gatherInputValues";
 import { DomPreviewCreate } from "@dom-preview/server";
 
+export const errors: Error[] = [];
+
 export function debug(): void {
   // TODO: Tests  missing
-  console.log("debug");
   fetch("http://localhost:1234/api/previews", {
     method: "POST",
     body: JSON.stringify({
@@ -12,5 +13,7 @@ export function debug(): void {
       inputValues: gatherInputValues(),
       context: "default",
     } satisfies DomPreviewCreate),
-  }).catch(console.error);
+  }).catch((error) => {
+    errors.push(error);
+  });
 }
