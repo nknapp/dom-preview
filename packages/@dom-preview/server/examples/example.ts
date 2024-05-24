@@ -12,14 +12,14 @@ process.on("SIGINT", () => {
 
 // In the browser:
 const eventSource = new EventSource(
-  "http://localhost:1234/api/stream/previews",
+  "http://localhost:5007/api/stream/previews",
 );
 eventSource.addEventListener("preview-added", (event) => {
   console.log(JSON.parse(event.data));
 });
 
 // In the unit test:
-await fetch("http://localhost:1234/previews", {
+await fetch("http://localhost:5007/previews", {
   method: "POST",
   body: JSON.stringify({
     alias: "some alias name for the screenshot (optional)",
