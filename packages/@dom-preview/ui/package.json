@@ -17,7 +17,6 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "@eslint/js": "9.3.0",
     "@shoelace-style/shoelace": "2.15.1",
     "@testing-library/dom": "10.1.0",
     "@testing-library/jest-dom": "6.4.5",
@@ -43,12 +42,7 @@
     "vite-bundle-visualizer": "1.2.1",
     "vite-plugin-static-copy": "1.0.5",
     "vue": "3.4.27",
-    "vue-tsc": "^2.0.19"
-  },
-  "dependencies": {
-    "@blueprintui/components": "2.1.1",
-    "@blueprintui/layout": "2.1.1",
-    "@blueprintui/typography": "2.1.1",
+    "vue-tsc": "^2.0.19",
     "whatwg-fetch": "3.6.20"
   }
 }

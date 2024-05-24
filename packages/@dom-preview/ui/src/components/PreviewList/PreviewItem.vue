@@ -18,7 +18,7 @@ const label = computed(() => {
 
 <template>
   <sl-tree-item
-    :class="truncate"
+    class="truncate"
     :data-preview-id="props.preview.id"
     :key="props.preview.id"
     :selected="props.selected"
