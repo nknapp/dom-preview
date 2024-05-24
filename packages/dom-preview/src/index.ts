@@ -1,13 +1,6 @@
 import { gatherInputValues } from "./helpers/gatherInputValues";
 import { DomPreviewCreate } from "@dom-preview/server";
 
-function hydrate(inputValues: string[]) {
-  const inputElements = document.querySelectorAll("input");
-  for (let i = 0; i < inputElements.length; i++) {
-    inputElements[i].value = inputValues[i];
-  }
-}
-
 export function debug(): void {
   // TODO: Tests  missing
   console.log("debug");

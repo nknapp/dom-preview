@@ -79,7 +79,7 @@ describe("main", () => {
     await postDomPreview({
       html: "<html><body>Hello Main 2</body>",
     });
-    const { capturedEvents, eventSource } = await createTestEventSource(
+    const { capturedEvents } = await createTestEventSource(
       `http://localhost:${port}/api/stream/previews`,
     );
     await waitFor(() => {
