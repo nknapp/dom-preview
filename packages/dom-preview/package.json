@@ -3,7 +3,7 @@
   "version": "0.1.2",
   "description": "A replacement for vitest-preview with more features.",
   "types": "./dist/index.d.cts",
-  "module": "./dist/index.js",
+  "module": "./dist/index.mjs",
   "main": "./dist/index.cjs",
   "bin": {
     "dom-preview": "./dist/bin/server.cjs"
@@ -27,6 +27,7 @@
     "test:ts": "tsc --project tsconfig.json --noEmit",
     "test": "run-s test:*",
     "build": "pkgroll",
+    "clean": "rm dist -rf",
     "dev:unit": "vitest --ui --clearScreen=false --reporter=dot",
     "dev:ts": "tsc --project tsconfig.json --noEmit --watch",
     "dev": "run-p dev:*"

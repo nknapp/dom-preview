@@ -8,7 +8,7 @@
     "packages/@dom-preview/ui",
     "packages/@dom-preview/server",
     "packages/dom-preview",
-    "packages/playground"
+    "playground"
   ],
   "type": "module",
   "scripts": {
@@ -20,10 +20,11 @@
     "test:workspaces": "npm run test --workspaces",
     "test": "run-s test:*",
     "build": "npm run build --workspaces --if-present",
+    "clean": "npm run clean --workspaces --if-present",
     "version": "node ./scripts/on-version-bump.js",
     "play:server": "npm run dev:server --workspace=packages/@dom-preview/server",
     "play:ui": "npm run dev:server --workspace=packages/@dom-preview/ui",
-    "play:playground": "npm run dev:unit --workspace=packages/playground",
+    "play:playground": "npm run dev:unit --workspace=playground",
     "play": "run-p play:*"
   },
   "author": "Nils Knappmeier",

@@ -16,7 +16,8 @@
     "dev": "run-p dev:*",
     "dev:server": "vite-node -w src/development/startDevApi.ts",
     "dev:unit": "vitest --ui",
-    "build": "pkgroll"
+    "build": "pkgroll",
+    "clean": "rm dist -rf"
   },
   "keywords": [],
   "author": "",

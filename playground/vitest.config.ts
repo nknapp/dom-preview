@@ -1,10 +1,10 @@
 import { defineConfig } from "vitest/config";
 
-const alias = process.env.WATCH_DOM_PREVIEW
+const alias: Record<string, string> = process.env.WATCH_DOM_PREVIEW
   ? {
-      "dom-preview": "../dom-preview/src/index.ts",
+      "dom-preview": "../packages/dom-preview/src/index.ts",
     }
-  : {};
+  : ({} as const);
 
 export default defineConfig({
   resolve: {
