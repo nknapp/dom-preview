@@ -1,9 +1,8 @@
 /* eslint-disable */
-const path = require("node:path")
-
+const path = require("node:path");
 
 module.exports = {
-    getUiRootFolder() {
-        return path.join(__dirname, "..", "dist")
-    }
-}
+  getUiRootFolder() {
+    return path.join(__dirname, "..", "dist");
+  },
+};

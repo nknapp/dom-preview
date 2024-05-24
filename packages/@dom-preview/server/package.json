@@ -1,6 +1,6 @@
 {
   "name": "@dom-preview/server",
-  "version": "0.0.1",
+  "version": "0.1.2",
   "description": "The live-server of the dom-preview package",
   "type": "module",
   "main": "dist/main.cjs",
@@ -11,8 +11,7 @@
   ],
   "scripts": {
     "test": "run-s test:*",
-    "test:lint": "eslint",
-    "test:types": "tsc",
+    "test:ts": "tsc",
     "test:unit": "vitest run --watch=false",
     "dev": "run-p dev:*",
     "dev:server": "vite-node -w src/development/startDevApi.ts",

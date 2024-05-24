@@ -6,7 +6,7 @@
       :expanded="
         previewItems.some((preview) => preview.id === props.modelValue)
       "
-      >
+    >
       <span :title="previewContext">{{ previewContext }}</span>
       <sl-badge
         data-testid="previewlist-counter"

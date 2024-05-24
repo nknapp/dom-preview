@@ -16,7 +16,7 @@ describe("counter", () => {
     await user.click(counter);
     debug();
     await user.click(counter);
-    debug();
+    debug("final");
     expect(counter.textContent).toEqual("Count 2");
   });
 });

@@ -1,6 +1,5 @@
-import path from "node:path"
-
+import path from "node:path";
 
 export function getUiRootFolder() {
-    return path.join(import.meta.dirname, "dist")
+  return path.join(import.meta.dirname, "dist");
 }

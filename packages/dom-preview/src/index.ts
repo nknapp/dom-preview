@@ -3,12 +3,13 @@ import { DomPreviewCreate } from "@dom-preview/server";
 
 export const errors: Error[] = [];
 
-export function debug(): void {
+export function debug(alias: string | undefined): void {
   // TODO: Tests  missing
   fetch("http://localhost:1234/api/previews", {
     method: "POST",
     body: JSON.stringify({
       html: document.documentElement.outerHTML,
+      alias,
       timestamp: Date.now(),
       inputValues: gatherInputValues(),
       context: "default",

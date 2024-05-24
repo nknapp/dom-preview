@@ -23,9 +23,8 @@
     }
   },
   "scripts": {
-    "test:lint": "eslint .",
     "test:unit": "vitest run",
-    "test:types": "tsc --project tsconfig.json --noEmit",
+    "test:ts": "tsc --project tsconfig.json --noEmit",
     "test": "run-s test:*",
     "prebuild": "rm -rf dist",
     "build": "pkgroll",

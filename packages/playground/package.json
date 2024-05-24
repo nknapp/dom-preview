@@ -8,7 +8,9 @@
   "scripts": {
     "dev": "run-p dev:*",
     "dev:unit": "WATCH_DOM_PREVIEW=true vitest --ui",
-    "dev:dom-preview": "dom-preview"
+    "dev:dom-preview": "dom-preview",
+    "test:unit": "vitest run --watch=false",
+    "test": "run-p test:*"
   },
   "keywords": [],
   "author": "",
