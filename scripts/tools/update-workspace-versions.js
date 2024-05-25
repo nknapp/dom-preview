@@ -13,9 +13,11 @@ export async function updateWorkspaceVersions() {
     workspaces.map(async (workspace) => await readWorkspaceName(workspace)),
   );
 
-  for (const workspace of workspaces) {
-    await updateWorkspaceVersionAndDeps(workspace, projectNames, version);
-  }
+  await Promise.all(
+    workspaces.map(async (workspace) => {
+      await updateWorkspace(workspace, projectNames, version);
+    }),
+  );
 
   cp.execSync("npm install", { stdio: "inherit" });
 }
@@ -26,7 +28,7 @@ async function readWorkspaceName(workspace) {
   return packageJson.name;
 }
 
-async function updateWorkspaceVersionAndDeps(workspace, projectNames, version) {
+async function updateWorkspace(workspace, projectNames, version) {
   const packageJsonPath = path.join(workspace, "package.json");
   console.log(`\nUpdating ${packageJsonPath}`);
   await editFile(packageJsonPath, (contents) => {
