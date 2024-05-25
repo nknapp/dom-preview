@@ -29,7 +29,7 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      "/api": "http://localhost:1234/",
+      "/api": "http://localhost:5007/",
     },
   },
   test: {

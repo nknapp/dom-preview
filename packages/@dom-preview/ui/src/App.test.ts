@@ -5,7 +5,7 @@ import { createDomPreview } from "@/model/DomPreview.test-helper.ts";
 import { waitFor } from "@testing-library/dom";
 import { upsertDomPreview } from "@/store/domPreviews.ts";
 import { user } from "@/test-utils/user.ts";
-import { debugInPlayMode } from "@/test-utils/debugInPlayMode.ts";
+import { getObjectUrl } from "@/test-utils/mockObjectUrl.ts";
 
 describe("App", () => {
   it("renders the title", async () => {
@@ -37,11 +37,8 @@ describe("App", () => {
       }),
     );
 
-    await waitFor(() => {
-      expect(dom.getByTestId("preview-frame")).toHaveProperty(
-        "srcdoc",
-        "<div>Hello 2</div>",
-      );
+    await waitFor(async () => {
+      expect(await getIFrameContents()).toEqual("<div>Hello 2</div>");
       expect(dom.getByRole("treeitem", { name: "Preview 2" })).toHaveProperty(
         "selected",
         true,
@@ -79,10 +76,7 @@ describe("App", () => {
       }),
     );
 
-    expect(await dom.findByTestId("preview-frame")).toHaveProperty(
-      "srcdoc",
-      "<div>Hello 3</div>",
-    );
+    expect(await getIFrameContents()).toEqual("<div>Hello 3</div>");
 
     expect(
       await dom.findByRole("treeitem", { name: "Last Preview" }),
@@ -100,7 +94,6 @@ describe("App", () => {
         html: "<div>Hello 1</div>",
       }),
     );
-    debugInPlayMode("alias1");
     upsertDomPreview(
       createDomPreview({
         id: "preview2",
@@ -109,9 +102,16 @@ describe("App", () => {
     );
 
     await user.click(await dom.findByText("Preview 1"));
-    debugInPlayMode("alias3");
     expect(document.location.search).toEqual("?dom-preview=preview1");
   });
 
+  // With JSDOM, this cannot be tests, because createObjectUrl does not work in JSDom, so we had to mock it.
+  it.todo("hydrates input value");
+
   it.todo("clears the previews then the clear button is clicked");
 });
+
+async function getIFrameContents() {
+  const iframe = await dom.findByTestId<HTMLIFrameElement>("preview-frame");
+  return await getObjectUrl(iframe.src);
+}

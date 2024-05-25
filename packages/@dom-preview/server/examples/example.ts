@@ -2,7 +2,7 @@ import { runDomPreviewServer, type DomPreviewCreate } from "../src/main.js";
 
 // Put your frontend files into ./static-files
 const { shutdown } = await runDomPreviewServer({
-  port: 1234,
+  port: 5007,
   staticFilesDir: "./static-files",
 });
 

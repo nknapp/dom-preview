@@ -5,7 +5,6 @@ import { DomPreviewCreate } from "@dom-preview/server";
 export const errors: Error[] = [];
 
 export function debug(alias: string | undefined): void {
-  // TODO: Tests  missing
   fetch(`http://localhost:${serverPort}/api/previews`, {
     method: "POST",
     body: JSON.stringify({

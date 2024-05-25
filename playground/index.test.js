@@ -1,6 +1,7 @@
 import { createCounter } from "./index";
 import { userEvent } from "@testing-library/user-event";
 import { debug } from "dom-preview";
+import { screen } from "@testing-library/dom";
 
 describe("counter", () => {
   let user = null;
@@ -18,5 +19,16 @@ describe("counter", () => {
     await user.click(counter);
     debug("final");
     expect(counter.textContent).toEqual("Count 2");
+  });
+
+  it("input fields", async () => {
+    document.body.innerHTML = `
+      <label for="firstname">First name:</label><input id="firstname" type="text" value="" />
+      <label for="lastname">Last name:</label><input id="lastname" type="text" value="" />
+    `;
+    await user.type(screen.getByLabelText("First name:"), "Max");
+    await user.type(screen.getByLabelText("Last name:"), "Mustermann");
+
+    debug("Inputs");
   });
 });

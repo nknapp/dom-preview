@@ -1,7 +1,7 @@
 import { runDomPreviewServer } from "../main.js";
 import { logInfo } from "../utils/logger.js";
 
-const { shutdown, port } = await runDomPreviewServer({ port: 1234 });
+const { shutdown, port } = await runDomPreviewServer({ port: 5007 });
 
 logInfo(
   `${new Date().toISOString()}: Server without UI running at port http://localhost:${port}`,
