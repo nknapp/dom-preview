@@ -40,7 +40,7 @@ There are three components
 
 * A small Node.js server that accepts preview data on an endpoint and provides a [server-sent events](https://developer.mozilla.org/en-US/docs/Web/API/EventSource)
 endpoint to push live-updates to a frontend
-* The frontend that shows a list of received previews and shows them in an iframe element.
+* The frontend (runs on the server), that shows a list of received previews and shows them in an iframe element.
 * The \`debug()\` function that dumps the current DOM and sends it to the server.
 
 ## Installation and configuration
@@ -93,9 +93,8 @@ This project is licensed under the [MIT License](./LICENSE)
 
 ## Maintainance
 
-I want to be honest. I am not good at maintaining OS projects these days. There is just to much going on in my life.
-
-I tried to design this project to make it easily maintainable.  
+I want to be honest. There is just to much going on in my life at the moment and I might not have much time maintaining this project.
+I wanted to do it anyway. I tried to design this project to make it easily maintainable.  
 
 * There are no dependendies except for development.
 * The only runtime dependencies (which are bundled) are ${npmPackage("sirv")}, ${npmPackage("zod")}, ${npmPackage("@shoelace-style/shoelace")}
