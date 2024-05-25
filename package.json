@@ -22,15 +22,19 @@
     "build": "npm run build --workspaces --if-present",
     "clean": "npm run clean --workspaces --if-present",
     "version": "node ./scripts/on-version-bump.js",
+    "bump:minor": "npm version minor -ws",
     "play:server": "npm run dev:server --workspace=packages/@dom-preview/server",
     "play:ui": "npm run dev:server --workspace=packages/@dom-preview/ui",
     "play:playground": "npm run dev:unit --workspace=playground",
-    "play": "run-p play:*"
+    "play": "run-p play:*",
+    "preversion": "npm run build && npm run test",
+    "postversion": "npm run publish -ws"
   },
   "author": "Nils Knappmeier",
   "license": "MIT",
   "lint-staged": {
-    "*.{js,ts,css,md}": "prettier --write"
+    "*.{js,ts,css,md}": "prettier --write",
+    "scripts/build-readme.js": "node scripts/build-readme.js"
   },
   "devDependencies": {
     "@eslint/js": "9.3.0",
