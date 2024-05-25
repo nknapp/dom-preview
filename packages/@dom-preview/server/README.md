@@ -1,6 +1,6 @@
 # @dom-preview/server
 
-This is the server component of dom-preview
+This is the server component of [dom-preview](https://npmjs.com/packages/dom-preview).
 
 # Usage
 
