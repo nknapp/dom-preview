@@ -2,6 +2,10 @@
 
 # Upcoming
 
+# v0.2.0
+
+Date: 2024-05-25T16:06:05.365Z
+
 - Add server component and support for multiple previews
 - Remove support for showing active element (for now)
 
