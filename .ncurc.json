@@ -2,5 +2,5 @@
   "$schema": "https://raw.githubusercontent.com/raineorshine/npm-check-updates/main/src/types/RunOptions.json",
   "doctor": true,
   "doctorInstall": "npm install",
-  "doctorTest": "npm run build && npm run test "
+  "doctorTest": "npm run build-and-test"
 }

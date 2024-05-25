@@ -20,6 +20,7 @@
     "test:workspaces": "npm run test --workspaces",
     "test": "run-s test:*",
     "build": "npm run build --workspaces --if-present",
+    "build-and-test": "run-s build test",
     "clean": "npm run clean --workspaces --if-present",
     "version": "node ./scripts/on-version-bump.js",
     "bump:minor": "npm version minor -ws",
