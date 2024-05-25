@@ -29,7 +29,7 @@
     "play:playground": "npm run dev:unit --workspace=playground",
     "play": "run-p play:*",
     "preversion": "npm run build && npm run test",
-    "postversion": "npm publish -ws"
+    "postversion": "npm publish -ws && git push origin main --tags"
   },
   "author": "Nils Knappmeier",
   "license": "MIT",
