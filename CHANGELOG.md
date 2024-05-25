@@ -2,6 +2,8 @@
 
 # Upcoming
 
+- fix: publish "dist" folder of @dom-preview/ui
+
 # v0.2.1
 
 Date: 2024-05-25T16:12:35.543Z
