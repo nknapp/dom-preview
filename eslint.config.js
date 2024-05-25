@@ -45,6 +45,10 @@ export default [
     files: ["packages/@dom-preview/ui"],
     languageOptions: { globals: globals.browser },
   },
+  {
+    files: ["**/*.cjs"],
+    languageOptions: { globals: globals.commonjs },
+  },
   prettier,
   {
     rules: {
