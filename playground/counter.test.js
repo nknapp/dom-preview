@@ -1,4 +1,4 @@
-import { createCounter } from "./index";
+import { createCounter } from "./counter.js";
 import { userEvent } from "@testing-library/user-event";
 import { debug } from "dom-preview";
 import { screen } from "@testing-library/dom";

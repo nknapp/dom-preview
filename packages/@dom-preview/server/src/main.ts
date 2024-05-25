@@ -7,7 +7,7 @@ import { DomPreviewSse } from "./endpoints/DomPreviewSse.js";
 import { DomPreviewStore } from "./store/DomPreviewStore.js";
 import { createPostPreviewsHandler } from "./endpoints/createPostPreviewsHandler.js";
 import { ReqResHandler } from "./utils/asReqResHandler.js";
-import { createSimpleRouter } from "./endpoints/router.js";
+import { createPrefixRouter, createSimpleRouter } from "./endpoints/router.js";
 import { logInfo } from "./utils/logger.js";
 
 export type { DomPreview, DomPreviewCreate } from "./model/DomPreview.js";
@@ -29,10 +29,13 @@ export async function runDomPreviewServer({
   const store = new DomPreviewStore();
   const serverSideEvents = createPreviewStreamHandler(store);
   const server = createServer(
-    createSimpleRouter({
-      "GET /api/stream/previews": serverSideEvents.handleRequest,
-      "POST /api/previews": createPostPreviewsHandler(store),
-      "*": createStaticFilesHandler(staticFilesDir),
+    createPrefixRouter({
+      "/__dom-preview__/": createSimpleRouter({
+        "GET /api/stream/previews": serverSideEvents.handleRequest,
+        "POST /api/previews": createPostPreviewsHandler(store),
+        "*": createStaticFilesHandler(staticFilesDir),
+      }),
+      "*": (req, res) => res.end("fallback"),
     }),
   );
 

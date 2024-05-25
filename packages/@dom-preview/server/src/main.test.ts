@@ -24,14 +24,14 @@ describe("main", () => {
   });
 
   it("delivers the index.html page", async () => {
-    const response = await fetch(`http://localhost:${port}/`);
+    const response = await fetch(`http://localhost:${port}/__dom-preview__/`);
     const html = await response.text();
     await assertHtml(html, "<html><body>Hello</body></html>");
   });
 
   it("'events'-endpoint delivers added dom-previews ", async () => {
     const { capturedEvents } = await createTestEventSource(
-      `http://localhost:${port}/api/stream/previews`,
+      `http://localhost:${port}/__dom-preview__/api/stream/previews`,
     );
     await postDomPreview({
       html: "<html><body>Hello Main</body>",
@@ -53,7 +53,7 @@ describe("main", () => {
     const messageReceived = promiseWithResolvers<void>();
 
     const eventSource = new EventSource(
-      `http://localhost:${port}/api/stream/previews`,
+      `http://localhost:${port}/__dom-preview__/api/stream/previews`,
     );
     eventSource.addEventListener("preview-added", (preview) => {
       ids.add(JSON.parse(preview.data).id);
@@ -80,7 +80,7 @@ describe("main", () => {
       html: "<html><body>Hello Main 2</body>",
     });
     const { capturedEvents } = await createTestEventSource(
-      `http://localhost:${port}/api/stream/previews`,
+      `http://localhost:${port}/__dom-preview__/api/stream/previews`,
     );
     await waitFor(() => {
       expect(capturedEvents).toEqual([
@@ -96,11 +96,13 @@ describe("main", () => {
     });
   });
 
+  it.todo("proxies to configured URL as fallback");
+
   it.todo("prints a info message after startup");
   it.todo("opens the browser");
 
   async function postDomPreview(partial: Partial<DomPreviewCreate>) {
-    await fetch(`http://localhost:${port}/api/previews`, {
+    await fetch(`http://localhost:${port}/__dom-preview__/api/previews`, {
       method: "POST",
       body: JSON.stringify(createDomPreviewCreate(partial)),
     });
@@ -120,7 +122,9 @@ describe("without static files dir", () => {
   });
 
   it("return 404 with error message for static files", async () => {
-    const response = await fetch(`http://localhost:${port}/index.html`);
+    const response = await fetch(
+      `http://localhost:${port}/__dom-preview__/index.html`,
+    );
     expect(response.status).toBe(404);
     const html = await response.text();
     await assertHtml(

@@ -48,6 +48,8 @@ Run the server
 npx dom-preview
 ```
 
+Open http://localhost:5007/**dom-preview**/
+
 In your test, call the debug function
 
 ```javascript

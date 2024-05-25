@@ -3,11 +3,12 @@
   "version": "0.2.2",
   "description": "",
   "type": "module",
-  "main": "index.js",
+  "main": "counter.js",
   "private": true,
   "scripts": {
     "dev": "run-p dev:*",
     "dev:unit": "WATCH_DOM_PREVIEW=true vitest --ui",
+    "dev:server": "vite",
     "dev:dom-preview": "dom-preview",
     "test:unit": "vitest run --watch=false",
     "test": "run-p test:*"

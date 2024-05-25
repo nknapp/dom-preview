@@ -22,6 +22,7 @@ export default defineConfig({
       },
     }),
   ],
+  base: "/__dom-preview__/",
   resolve: {
     alias: {
       "@/": "/src/",

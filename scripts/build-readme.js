@@ -66,6 +66,8 @@ Run the server
 
 ${fences("bash", "npx dom-preview")}
 
+Open http://localhost:5007/__dom-preview__/
+
 In your test, call the debug function
 
 ${include("javascript", "playground/example.test.js")}

@@ -1,3 +1,3 @@
-import { createCounter } from "./index.js";
+import { createCounter } from "./counter.js";
 
 document.body.append(createCounter());
