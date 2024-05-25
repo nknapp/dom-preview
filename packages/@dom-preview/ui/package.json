@@ -5,7 +5,9 @@
   "main": "main/index.cjs",
   "module": "main/index.mjs",
   "types": "main/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev:unit": "vitest --ui",
     "dev:server": "vite",
