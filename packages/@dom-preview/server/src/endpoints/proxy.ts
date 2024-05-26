@@ -22,6 +22,12 @@ export function createProxy(baseUrl: string): ReqResHandler {
       const backendResponse = await new Promise<IncomingMessage>((resolve) => {
         http.get(baseUrl + req.url, { method: req.method, headers }, resolve);
       });
+      const backendHeaders = backendResponse.headersDistinct;
+      for (const [name, values] of Object.entries(backendHeaders)) {
+        if (values == null) continue;
+        res.setHeader(name, values);
+      }
+
       await pipeline(backendResponse, res);
     } catch (error) {
       logError(`Error proxying request ${req.method} ${req.url}`, error);

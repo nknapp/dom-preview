@@ -2,6 +2,7 @@ import { createTestServer } from "../test-utils/createTestServer.js";
 import { createProxy } from "./proxy.js";
 import { IncomingMessage } from "node:http";
 import http from "node:http";
+import { ReqResHandler } from "./ReqResHandler.js";
 
 describe("proxy", () => {
   it("forwards requests to a backend and returns the response", async () => {
@@ -40,20 +41,34 @@ describe("proxy", () => {
     const { capturedRequests, port } = await createProxyWithBackend();
 
     // fetch with multiple headers is broken, so we use node:http here
-    await new Promise((resolve) => {
-      http.get(
-        `http://localhost:${port}/`,
-        {
-          headers: { "X-Custom-Header": ["SomeValue1", "SomeValue2"] },
-        },
-        resolve,
-      );
+    await getViaNodeHttpAgent(`http://localhost:${port}/`, {
+      headers: { "X-Custom-Header": ["SomeValue1", "SomeValue2"] },
     });
     expect(capturedRequests).toHaveLength(1);
     expect(capturedRequests[0].headers["x-custom-header"]).toEqual([
       "SomeValue1",
       "SomeValue2",
     ]);
+  });
+
+  it("applies headers to response", async () => {
+    const { fetchResponse } = await createProxyWithBackend(({ res }) => {
+      res.setHeader("content-type", "svg/xml");
+      res.end("hello");
+    });
+
+    const response = await fetchResponse("/");
+    expect(response.headers.get("content-type")).toEqual("svg/xml");
+  });
+
+  it("applies multiple headers to response", async () => {
+    const { port } = await createProxyWithBackend(({ res }) => {
+      res.setHeader("x-custom-header", ["a", "b"]);
+      res.end("hello");
+    });
+
+    const response = await getViaNodeHttpAgent(`http://localhost:${port}/`);
+    expect(response.headersDistinct["x-custom-header"]).toEqual(["a", "b"]);
   });
 
   it.each`
@@ -94,11 +109,13 @@ interface CapturedRequest {
   headers: { [key: string]: string | string[] | undefined };
 }
 
-async function createProxyWithBackend() {
+async function createProxyWithBackend(
+  handler: ReqResHandler = ({ res }) => res.end("backend response"),
+) {
   const capturedRequests: CapturedRequest[] = [];
   const { port: backendPort } = await createTestServer(({ req, res }) => {
     capturedRequests.push(asCapturedRequest(req));
-    res.end("backend response");
+    handler({ req, res });
   });
 
   const proxy = await createTestServer(
@@ -113,4 +130,11 @@ function asCapturedRequest(req: IncomingMessage): CapturedRequest {
     path: req.url ?? "",
     headers: req.headersDistinct,
   };
+}
+
+type RequestOptions = Parameters<(typeof http)["get"]>[1];
+async function getViaNodeHttpAgent(url: string, options: RequestOptions = {}) {
+  return new Promise<IncomingMessage>((resolve) => {
+    http.get(url, options, resolve);
+  });
 }
