@@ -2,7 +2,6 @@ import { renderToDom } from "@/test-utils/renderToDom";
 import PreviewFrame from "./PreviewFrame.vue";
 import { createDomPreview } from "@/model/DomPreview.test-helper";
 import { dom } from "@/test-utils/dom.ts";
-import { getObjectUrl } from "@/test-utils/mockObjectUrl.ts";
 import { waitFor } from "@testing-library/dom";
 
 describe("PreviewFrame", () => {
@@ -16,11 +15,12 @@ describe("PreviewFrame", () => {
       },
     });
 
-    const iframe = dom.getByTestId<HTMLIFrameElement>("preview-frame");
+    const iframe = document.querySelector("iframe")!;
 
     await waitFor(async () => {
-      const contents = await getObjectUrl(iframe.src);
-      expect(contents).toEqual("<div>Hello</div>");
+      expect(iframe.src).toEqual(
+        "http://localhost/__dom-preview__/api/previews/dom-preview1.html",
+      );
     });
   });
 

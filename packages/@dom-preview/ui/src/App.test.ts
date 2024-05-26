@@ -2,10 +2,8 @@ import App from "./App.vue";
 import { renderToDom } from "./test-utils/renderToDom.ts";
 import { dom } from "./test-utils/dom.ts";
 import { createDomPreview } from "@/model/DomPreview.test-helper.ts";
-import { waitFor } from "@testing-library/dom";
 import { upsertDomPreview } from "@/store/domPreviews.ts";
 import { user } from "@/test-utils/user.ts";
-import { getObjectUrl } from "@/test-utils/mockObjectUrl.ts";
 
 describe("App", () => {
   it("renders the title", async () => {
@@ -37,17 +35,17 @@ describe("App", () => {
       }),
     );
 
-    await waitFor(async () => {
-      expect(await getIFrameContents()).toEqual("<div>Hello 2</div>");
-      expect(dom.getByRole("treeitem", { name: "Preview 2" })).toHaveProperty(
-        "selected",
-        true,
-      );
-      expect(dom.getByRole("treeitem", { name: /initial/ })).toHaveProperty(
-        "expanded",
-        true,
-      );
-    });
+    expect(await getIframeSrc()).toEqual(
+      "http://localhost/__dom-preview__/api/previews/preview2.html",
+    );
+    expect(dom.getByRole("treeitem", { name: "Preview 2" })).toHaveProperty(
+      "selected",
+      true,
+    );
+    expect(dom.getByRole("treeitem", { name: /initial/ })).toHaveProperty(
+      "expanded",
+      true,
+    );
   });
 
   it("selects last preview if no id is in URL", async () => {
@@ -76,7 +74,9 @@ describe("App", () => {
       }),
     );
 
-    expect(await getIFrameContents()).toEqual("<div>Hello 3</div>");
+    expect(await getIframeSrc()).toEqual(
+      "http://localhost/__dom-preview__/api/previews/preview3.html",
+    );
 
     expect(
       await dom.findByRole("treeitem", { name: "Last Preview" }),
@@ -111,7 +111,7 @@ describe("App", () => {
   it.todo("clears the previews then the clear button is clicked");
 });
 
-async function getIFrameContents() {
+async function getIframeSrc() {
   const iframe = await dom.findByTestId<HTMLIFrameElement>("preview-frame");
-  return await getObjectUrl(iframe.src);
+  return iframe.src;
 }
