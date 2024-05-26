@@ -29,8 +29,6 @@ if (args.values.help) {
   showHelpAndExit(options);
 }
 
-console.log(args);
-
 runDomPreviewServer({
   port: serverPort,
   staticFilesDir: getUiRootFolder(),
