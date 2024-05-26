@@ -9,25 +9,33 @@ import { ReqResHandler } from "./ReqResHandler.js";
 
 describe("createSimpleRouter", () => {
   it("matches methods", async () => {
-    const endpoints = {
+    const { fetchText } = await simple({
       "GET /test/": returning("GET"),
       "POST /test/": returning("POST"),
       "*": returning("star"),
-    };
-    const { fetchText } = await simple(endpoints);
+    } satisfies EndPoints);
     expect.soft(await fetchText("/test/")).toEqual("GET");
     expect(await fetchText("/test/", { method: "POST" })).toEqual("POST");
   });
 
   it("matches paths", async () => {
-    const endpoints = {
+    const { fetchText } = await simple({
       "GET /test1/": returning("Test 1"),
       "GET /test2/": returning("Test 2"),
       "*": returning("star"),
-    };
-    const { fetchText } = await simple(endpoints);
+    });
     expect.soft(await fetchText("/test1/")).toEqual("Test 1");
     expect(await fetchText("/test2/")).toEqual("Test 2");
+  });
+
+  it("injects params", async () => {
+    const { fetchText } = await simple({
+      "GET /test/": returning("GET"),
+      "POST /test/": returning("POST"),
+      "GET /test/:param1": ({ res, params }) => res.end(params?.param1),
+      "*": returning("star"),
+    });
+    expect(await fetchText("/test/hello")).toEqual("hello");
   });
 
   it("calls wildcard endpoint if nothing matches", async () => {

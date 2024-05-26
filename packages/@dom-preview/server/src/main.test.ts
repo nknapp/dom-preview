@@ -22,100 +22,136 @@ describe("main", () => {
   ) {
     const server = await runDomPreviewServer({
       port: 0,
-      staticFilesDir: path.resolve(import.meta.dirname, "main.test.resources"),
       ...args,
     });
     afterTest(() => server.shutdown());
-    return { port: server.port };
+    return {
+      port: server.port,
+      fetch(path: string) {
+        return fetch(`http://localhost:${server.port}${path}`);
+      },
+    };
   }
 
-  it("delivers the index.html page", async () => {
-    const { port } = await createTestDomPreviewServer();
-    const response = await fetch(`http://localhost:${port}/__dom-preview__/`);
-    const html = await response.text();
-    await assertHtml(html, "<html><body>Hello</body></html>");
+  describe("/__dom-preview__/", () => {
+    it("delivers the index.html page", async () => {
+      const dir = path.resolve(import.meta.dirname, "main.test.resources");
+      const { fetch } = await createTestDomPreviewServer({
+        staticFilesDir: dir,
+      });
+
+      const response = await fetch(`/__dom-preview__/`);
+      const html = await response.text();
+
+      await assertHtml(html, "<html><body>Hello</body></html>");
+    });
+
+    it("returns 404 with error message for static files", async () => {
+      const { fetch } = await createTestDomPreviewServer({});
+
+      const response = await fetch(`/__dom-preview__/index.html`);
+      expect(response.status).toBe(404);
+      const html = await response.text();
+      await assertHtml(
+        html,
+        "Static file delivery is disabled. Not found: /index.html",
+      );
+    });
   });
 
-  it("'events'-endpoint delivers added dom-previews ", async () => {
-    const { port } = await createTestDomPreviewServer();
-    const { capturedEvents } = await createTestEventSource(
-      `http://localhost:${port}/__dom-preview__/api/stream/previews`,
-    );
-    await postDomPreview(port, {
-      html: "<html><body>Hello Main</body>",
-    });
-    await waitFor(() => {
-      expect(capturedEvents).toEqual([
-        createDomPreview({
-          id: expect.any(String),
-          html: "<html><body>Hello Main</body>",
-        }),
-      ]);
-    });
-  });
-
-  it("'events'-endpoint generates different ids for each dom-preview", async () => {
-    const { port } = await createTestDomPreviewServer();
-    const totalIds = 3;
-    const ids = new Set<string>();
-    let pendingIds = totalIds;
-    const messageReceived = promiseWithResolvers<void>();
-
-    const eventSource = new EventSource(
-      `http://localhost:${port}/__dom-preview__/api/stream/previews`,
-    );
-    eventSource.addEventListener("preview-added", (preview) => {
-      ids.add(JSON.parse(preview.data).id);
-      pendingIds--;
-      if (pendingIds === 0) {
-        messageReceived.resolve();
-      }
-    });
-
-    for (let i = 0; i < totalIds; i++) {
+  describe("/__dom-preview__/stream/previews", () => {
+    it("streaming-endpoint delivers added dom-previews ", async () => {
+      const { port } = await createTestDomPreviewServer();
+      const { capturedEvents } = await createTestEventSource(
+        `http://localhost:${port}/__dom-preview__/api/stream/previews`,
+      );
       await postDomPreview(port, {
         html: "<html><body>Hello Main</body>",
       });
-    }
-    await messageReceived.promise;
-    expect([...ids]).toHaveLength(totalIds);
+      await waitFor(() => {
+        expect(capturedEvents).toEqual([
+          createDomPreview({
+            id: expect.any(String),
+            html: "<html><body>Hello Main</body>",
+          }),
+        ]);
+      });
+    });
+
+    it("streaming-endpoint generates different ids for each dom-preview", async () => {
+      const { port } = await createTestDomPreviewServer();
+      const totalIds = 3;
+      const ids = new Set<string>();
+      let pendingIds = totalIds;
+      const messageReceived = promiseWithResolvers<void>();
+
+      const eventSource = new EventSource(
+        `http://localhost:${port}/__dom-preview__/api/stream/previews`,
+      );
+      eventSource.addEventListener("preview-added", (preview) => {
+        ids.add(JSON.parse(preview.data).id);
+        pendingIds--;
+        if (pendingIds === 0) {
+          messageReceived.resolve();
+        }
+      });
+
+      for (let i = 0; i < totalIds; i++) {
+        await postDomPreview(port, {
+          html: "<html><body>Hello Main</body>",
+        });
+      }
+      await messageReceived.promise;
+      expect([...ids]).toHaveLength(totalIds);
+    });
+
+    it("streaming-endpoint sends existing previews on connecting", async () => {
+      const { port } = await createTestDomPreviewServer();
+      await postDomPreview(port, {
+        html: "<html><body>Hello Main 1</body>",
+      });
+      await postDomPreview(port, {
+        html: "<html><body>Hello Main 2</body>",
+      });
+      const { capturedEvents } = await createTestEventSource(
+        `http://localhost:${port}/__dom-preview__/api/stream/previews`,
+      );
+      await waitFor(() => {
+        expect(capturedEvents).toEqual([
+          createDomPreview({
+            id: expect.any(String),
+            html: "<html><body>Hello Main 1</body>",
+          }),
+          createDomPreview({
+            id: expect.any(String),
+            html: "<html><body>Hello Main 2</body>",
+          }),
+        ]);
+      });
+    });
   });
 
-  it("events-endpoint sends existing previews on connecting", async () => {
-    const { port } = await createTestDomPreviewServer();
-    await postDomPreview(port, {
-      html: "<html><body>Hello Main 1</body>",
-    });
-    await postDomPreview(port, {
-      html: "<html><body>Hello Main 2</body>",
-    });
-    const { capturedEvents } = await createTestEventSource(
-      `http://localhost:${port}/__dom-preview__/api/stream/previews`,
-    );
-    await waitFor(() => {
-      expect(capturedEvents).toEqual([
-        createDomPreview({
-          id: expect.any(String),
-          html: "<html><body>Hello Main 1</body>",
-        }),
-        createDomPreview({
-          id: expect.any(String),
-          html: "<html><body>Hello Main 2</body>",
-        }),
-      ]);
-    });
-  });
+  describe("Not within /__dom-previews__/", () => {
+    it("proxies to configured URL as fallback", async () => {
+      const backend = await createTestServer(({ req, res }) =>
+        res.end("backend response = " + req.url),
+      );
+      const { fetch } = await createTestDomPreviewServer({
+        proxyUnknownRequestsTo: `http://localhost:${backend.port}`,
+      });
 
-  it("proxies to configured URL as fallback", async () => {
-    const { port: backendPort } = await createTestServer(({ req, res }) =>
-      res.end("backend response = " + req.url),
-    );
-    const { port } = await createTestDomPreviewServer({
-      proxyUnknownRequestsTo: `http://localhost:${backendPort}`,
+      const response = await fetch(`/some-file`);
+      expect(await response.text()).toEqual("backend response = /some-file");
     });
 
-    const response = await fetch(`http://localhost:${port}/some-file`);
-    expect(await response.text()).toEqual("backend response = /some-file");
+    it("returns error if no backend URL is configuerd", async () => {
+      const { fetch } = await createTestDomPreviewServer();
+
+      const response = await fetch(`/some-file`);
+      expect(await response.text()).toEqual(
+        "Proxy target is disabled. Not found: /some-file",
+      );
+    });
   });
 
   it.todo("prints a info message after startup");
@@ -130,29 +166,4 @@ describe("main", () => {
       body: JSON.stringify(createDomPreviewCreate(partial)),
     });
   }
-});
-
-describe("without static files dir", () => {
-  let port = 0;
-  beforeEach(async () => {
-    const server = await runDomPreviewServer({
-      port: 0,
-    });
-    port = server.port;
-    return () => {
-      server.shutdown();
-    };
-  });
-
-  it("return 404 with error message for static files", async () => {
-    const response = await fetch(
-      `http://localhost:${port}/__dom-preview__/index.html`,
-    );
-    expect(response.status).toBe(404);
-    const html = await response.text();
-    await assertHtml(
-      html,
-      "Static file delivery is disabled. Not found: /index.html",
-    );
-  });
 });
