@@ -22,7 +22,7 @@ export async function createTestServer(
     async fetchText(path: string, init?: RequestInit): Promise<string> {
       return (await fetchResponse(path, init)).text();
     },
-    async fetchJson(path: string, init?: RequestInit): Promise<string> {
+    async fetchJson<T>(path: string, init?: RequestInit): Promise<T> {
       return (await fetchResponse(path, init)).json();
     },
   };

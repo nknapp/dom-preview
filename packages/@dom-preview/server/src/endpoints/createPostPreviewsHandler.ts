@@ -7,6 +7,10 @@ import {
   DomPreviewCreateModel,
 } from "../model/DomPreview.js";
 
+export interface CreatePreviewResponse {
+  id: string;
+}
+
 export function createPostPreviewsHandler(
   store: DomPreviewStore,
 ): ReqResHandler {
@@ -25,7 +29,7 @@ export function createPostPreviewsHandler(
     }
 
     const domPreview: DomPreviewCreate = validatedBody.data;
-    store.addDomPreview(domPreview);
-    return new Response("", { status: 201 });
+    const { id } = store.addDomPreview(domPreview);
+    return new Response(JSON.stringify({ id }), { status: 201 });
   });
 }

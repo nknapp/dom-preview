@@ -37,6 +37,9 @@ export async function runDomPreviewServer({
         createPrefixRouter({
           "/__dom-preview__/": createSimpleRouter({
             "GET /api/stream/previews": serverSideEvents.handleRequest,
+            "GET /api/previews/:previewId.html": ({ res, params }) => {
+              res.end(store.getDomPreviewById(params!.previewId)?.html);
+            },
             "POST /api/previews": createPostPreviewsHandler(store),
             "*": staticFilesDir
               ? fromNodeJs(sirv(staticFilesDir))

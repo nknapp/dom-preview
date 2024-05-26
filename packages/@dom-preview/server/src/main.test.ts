@@ -1,4 +1,5 @@
 import {
+  DomPreview,
   DomPreviewCreate,
   DomPreviewServerArgs,
   runDomPreviewServer,
@@ -27,8 +28,8 @@ describe("main", () => {
     afterTest(() => server.shutdown());
     return {
       port: server.port,
-      fetch(path: string) {
-        return fetch(`http://localhost:${server.port}${path}`);
+      fetch(path: string, requestInit?: RequestInit) {
+        return fetch(`http://localhost:${server.port}${path}`, requestInit);
       },
     };
   }
@@ -56,6 +57,34 @@ describe("main", () => {
         html,
         "Static file delivery is disabled. Not found: /index.html",
       );
+    });
+  });
+
+  describe("/__dom-preview__/previews/:previewId", () => {
+    it("responds 404 if preview does not exist", async () => {
+      const { fetch } = await createTestDomPreviewServer();
+      const response = await fetch("/__dom-preview__/api/previews/preview1");
+      expect(response.status).toBe(404);
+    });
+
+    it("returns the HTML of the preview, if Accept matches 'text/html' is  if preview does not exist", async () => {
+      const { fetch, port } = await createTestDomPreviewServer();
+      const createdPreview = await postDomPreview(
+        port,
+        createDomPreviewCreate({
+          html: "<html><body>Hello</body></html>",
+        }),
+      );
+      const response = await fetch(
+        `/__dom-preview__/api/previews/${createdPreview.id}.html`,
+        {
+          headers: {
+            Accept: "text/html",
+          },
+        },
+      );
+      expect(response.status).toBe(200);
+      expect(await response.text()).toEqual("<html><body>Hello</body></html>");
     });
   });
 
@@ -160,10 +189,14 @@ describe("main", () => {
   async function postDomPreview(
     port: number,
     partial: Partial<DomPreviewCreate>,
-  ) {
-    await fetch(`http://localhost:${port}/__dom-preview__/api/previews`, {
-      method: "POST",
-      body: JSON.stringify(createDomPreviewCreate(partial)),
-    });
+  ): Promise<DomPreview> {
+    const response = await fetch(
+      `http://localhost:${port}/__dom-preview__/api/previews`,
+      {
+        method: "POST",
+        body: JSON.stringify(createDomPreviewCreate(partial)),
+      },
+    );
+    return response.json();
   }
 });

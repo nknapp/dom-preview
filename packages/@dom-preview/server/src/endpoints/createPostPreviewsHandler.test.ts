@@ -1,14 +1,18 @@
 import { createTestServer } from "../test-utils/createTestServer.js";
-import { createPostPreviewsHandler } from "./createPostPreviewsHandler.js";
+import {
+  createPostPreviewsHandler,
+  CreatePreviewResponse,
+} from "./createPostPreviewsHandler.js";
 import { DomPreviewStore } from "../store/DomPreviewStore.js";
 import { createDomPreview } from "../model/DomPreview.test-helper.js";
+import { DomPreview } from "../model/DomPreview.js";
 
 describe("PreviewsEndpoint", async () => {
   it("stores a valid preview json", async () => {
     const store = new DomPreviewStore();
     const previewsEndpoint = createPostPreviewsHandler(store);
-    const { fetchText } = await createTestServer(previewsEndpoint);
-    await fetchText("/", {
+    const { fetchJson } = await createTestServer(previewsEndpoint);
+    const response: CreatePreviewResponse = await fetchJson("/", {
       method: "POST",
       headers: new Headers({
         "content-type": "application/json",
@@ -24,6 +28,7 @@ describe("PreviewsEndpoint", async () => {
         html: "<html><body>PreviewsEndpointTest</body>",
       }),
     );
+    expect(response).toEqual({ id: response.id });
   });
 
   it("refuses an invalid preview json", async () => {

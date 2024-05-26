@@ -103,4 +103,30 @@ describe("domPreview", () => {
     const ids = store.domPreviews.map((preview) => preview.id);
     expect([...new Set(ids)]).toHaveLength(ids.length);
   });
+
+  describe("getDomPreviewById", () => {
+    it("returns null if no preview is found", () => {
+      const store = new DomPreviewStore();
+      expect(store.getDomPreviewById("something")).toBeNull();
+    });
+
+    it("finds a preview with the given id", () => {
+      const store = new DomPreviewStore();
+      const preview1 = store.addDomPreview(
+        createDomPreviewCreate({
+          context: "one",
+          alias: "the one",
+        }),
+      );
+      const preview2 = store.addDomPreview(
+        createDomPreviewCreate({
+          context: "two",
+          alias: "the two",
+        }),
+      );
+
+      expect.soft(store.getDomPreviewById(preview1.id)).toEqual(preview1);
+      expect.soft(store.getDomPreviewById(preview2.id)).toEqual(preview2);
+    });
+  });
 });

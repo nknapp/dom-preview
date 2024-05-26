@@ -33,6 +33,15 @@ describe("trouter", () => {
     });
   });
 
+  it("suffix", () => {
+    const router = new Trouter<string>();
+    router.post("/tmp/:abc.html", "A");
+    expect(router.find("POST", "/tmp/a.html")).toEqual({
+      handlers: ["A"],
+      params: { abc: "a" },
+    });
+  });
+
   it("real world", () => {
     const router = new Trouter<string>();
     router.use("*", "LOG");

@@ -12,9 +12,7 @@ watchEffect(() => {
   let domPreview = props.domPreview;
   let iframeElement = iframe.value;
   if (iframeElement != null && domPreview != null) {
-    let src = URL.createObjectURL(
-      new Blob([domPreview.html], { type: "text/html" }),
-    );
+    let src = `/__dom-preview__/api/previews/${encodeURIComponent(domPreview.id)}.html`;
     iframeElement.src = src;
     iframeElement.addEventListener(
       "load",
