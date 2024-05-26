@@ -30,16 +30,6 @@ There are three components
 npm install dom-preview-monorepo
 ```
 
-Make sure that your test-framework emits css into the DOM. In vitest, you need to set
-
-```javascript
-test: {
-  css: true;
-}
-```
-
-(see https://vitest.dev/config/#css for details)
-
 ## Usage
 
 Run the server
@@ -70,14 +60,40 @@ test("input fields", async () => {
 });
 ```
 
-Another convenient way is to use [npm-run-all](https://npmjs.com/package/npm-run-all) to run vite dev-server, tests in watch mode
+### CSS
+
+If you want nicely styled previews, you need to make sure that your test-framework emits css into the DOM. In vitest, you
+can do this by setting
+
+```javascript
+test: {
+  css: true;
+}
+```
+
+(see https://vitest.dev/config/#css for details)
+
+### Static assets
+
+Sometimes your previews show images or use other files that would usually be delivered by your web-server.
+Since the `dom-preview` server is framework independent, it does not have information about those assets.
+It does not have access to your build configuration.
+As a workaround, the server has the ability to proxy all requests that do not go to the `/__dom-preview__/`-path
+to another URL. You can do this by using the option `--proxy-to=<url>`:
+
+- Run your usual vite- or webpack-dev-server on port '5173'
+- Run `npx dom-preview --proxy-to-http://localhost:4000`
+
+## Optimal setup for vite
+
+Another convenient way is to use [npm-run-all](https://npmjs.com/package/npm-run-all) to run vite dev-server, tests in watch mode:
 
 ```json
 
 "scripts": {
-    "dev:server": "vite",
+    "dev:server": "vite --port=5173",
     "dev:unit": "vitest --ui",
-    "dev:live-server": "dom-preview",
+    "dev:dom-preview": "dom-preview --proxy-to=http://localhost:5173",
     "dev": "run-p dev:*",
 }
 
