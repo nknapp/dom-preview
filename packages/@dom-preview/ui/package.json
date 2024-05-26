@@ -1,6 +1,6 @@
 {
   "name": "@dom-preview/ui",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "type": "module",
   "main": "main/index.cjs",
   "module": "main/index.mjs",
