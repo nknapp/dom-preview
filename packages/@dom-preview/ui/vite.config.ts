@@ -30,7 +30,10 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      "/api": "http://localhost:5007/",
+      // Proxy everything to the server that is not UI
+      // We need this in order to get resources from the preview in play-mode.
+      // They are proxied to the server and to the playgrounds dev-server from there
+      "/": "http://localhost:5007/",
     },
   },
   test: {
