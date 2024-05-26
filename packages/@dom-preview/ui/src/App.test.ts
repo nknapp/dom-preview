@@ -4,6 +4,7 @@ import { dom } from "./test-utils/dom.ts";
 import { createDomPreview } from "@/model/DomPreview.test-helper.ts";
 import { upsertDomPreview } from "@/store/domPreviews.ts";
 import { user } from "@/test-utils/user.ts";
+import { within } from "@testing-library/dom";
 
 describe("App", () => {
   it("renders the title", async () => {
@@ -35,8 +36,8 @@ describe("App", () => {
       }),
     );
 
-    expect(await getIframeSrc()).toEqual(
-      "http://localhost/__dom-preview__/api/previews/preview2.html",
+    expect((await getIframeContent()).outerHTML).toEqual(
+      "<html><head></head><body><div>Hello 2</div></body></html>",
     );
     expect(dom.getByRole("treeitem", { name: "Preview 2" })).toHaveProperty(
       "selected",
@@ -74,10 +75,9 @@ describe("App", () => {
       }),
     );
 
-    expect(await getIframeSrc()).toEqual(
-      "http://localhost/__dom-preview__/api/previews/preview3.html",
+    expect((await getIframeContent()).outerHTML).toEqual(
+      "<html><head></head><body><div>Hello 3</div></body></html>",
     );
-
     expect(
       await dom.findByRole("treeitem", { name: "Last Preview" }),
     ).toHaveProperty("selected", true);
@@ -105,13 +105,35 @@ describe("App", () => {
     expect(document.location.search).toEqual("?dom-preview=preview1");
   });
 
-  // With JSDOM, this cannot be tests, because createObjectUrl does not work in JSDom, so we had to mock it.
-  it.todo("hydrates input value");
+  it("hydrates input value", async () => {
+    renderToDom(App, { props: {} });
+    upsertDomPreview(
+      createDomPreview({
+        id: "preview1",
+        html: `<div>
+                        <input placeholder='First name' type='text'>
+                        <input placeholder='Last name' type='text'>
+                     </div>`,
+        inputValues: ["John", "Smith"],
+      }),
+    );
+    const firstname = await within(
+      await getIframeContent(),
+    ).findByPlaceholderText("First name");
+    expect(firstname).toHaveValue("John");
+    const lastName = await within(
+      await getIframeContent(),
+    ).findByPlaceholderText("Last name");
+    expect(lastName).toHaveValue("Smith");
+  });
 
   it.todo("clears the previews then the clear button is clicked");
 });
 
-async function getIframeSrc() {
+async function getIframeContent() {
   const iframe = await dom.findByTestId<HTMLIFrameElement>("preview-frame");
-  return iframe.src;
+  if (iframe.contentDocument == null) {
+    throw new Error("Expected content document of preview-frame to exist");
+  }
+  return iframe.contentDocument.documentElement;
 }

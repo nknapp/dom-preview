@@ -2,7 +2,6 @@
 import { DomPreview } from "@/model/DomPreview";
 import { ref, watchEffect } from "vue";
 import { hydrate } from "@/components/PreviewFrame/hydrate.ts";
-import { logError } from "@/utils/logger.ts";
 
 const iframe = ref<HTMLIFrameElement | null>(null);
 const props = defineProps<{
@@ -12,27 +11,12 @@ const props = defineProps<{
 watchEffect(() => {
   let domPreview = props.domPreview;
   let iframeElement = iframe.value;
-  if (iframeElement != null && domPreview != null) {
-    const src = `/__dom-preview__/api/previews/${encodeURIComponent(domPreview.id)}.html`;
-    iframeElement.src = src;
-    iframeElement.addEventListener(
-      "load",
-      () => {
-        const currentSrc = new URL(iframeElement.src).pathname;
-        if (currentSrc !== src) {
-          logError(
-            `iframe src has changed:\nExpected: ${src}\nActual: ${iframeElement.src}`,
-          );
-          return;
-        }
-        if (iframeElement.contentDocument == null) {
-          logError(`iframe has no contentdocument`);
-          return;
-        }
-        hydrate(iframeElement.contentDocument, domPreview);
-      },
-      { once: true },
-    );
+  const iframeDoc = iframeElement?.contentDocument;
+  if (iframeDoc != null && domPreview != null) {
+    iframeDoc.open();
+    iframeDoc.write(domPreview.html);
+    iframeDoc.close();
+    hydrate(iframeDoc, domPreview);
   }
 });
 </script>

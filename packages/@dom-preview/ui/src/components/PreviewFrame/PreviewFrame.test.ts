@@ -18,8 +18,8 @@ describe("PreviewFrame", () => {
     const iframe = document.querySelector("iframe")!;
 
     await waitFor(async () => {
-      expect(iframe.src).toEqual(
-        "http://localhost/__dom-preview__/api/previews/dom-preview1.html",
+      expect(iframe.contentDocument?.documentElement.outerHTML).toEqual(
+        "<html><head></head><body><div>Hello</div></body></html>",
       );
     });
   });

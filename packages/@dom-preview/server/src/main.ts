@@ -37,6 +37,13 @@ export async function runDomPreviewServer({
         createPrefixRouter({
           "/__dom-preview__/": createSimpleRouter({
             "GET /api/stream/previews": serverSideEvents.handleRequest,
+            // Obsolete: I added this route because of iframe/asset problems
+            // It is not used at the moment and when this part of the code is
+            // refactored, it can be removed.
+            // Incidently, the 'trouter' dependency can probably also go
+            // when this is removed.
+            // Note that this endpoint only delivers the HTML and
+            // not the data that is needed to hydrate input-field etc.
             "GET /api/previews/:previewId.html": ({ res, params }) => {
               res.end(store.getDomPreviewById(params!.previewId)?.html);
             },
