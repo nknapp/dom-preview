@@ -1,4 +1,9 @@
-import { DomPreviewCreate, runDomPreviewServer } from "./main.js";
+import {
+  DomPreviewCreate,
+  DomPreviewServer,
+  DomPreviewServerArgs,
+  runDomPreviewServer,
+} from "./main.js";
 import path from "node:path";
 import { assertHtml } from "./test-utils/assertHtml.js";
 import EventSource from "eventsource";
@@ -9,31 +14,35 @@ import {
 import { promiseWithResolvers } from "./utils/promiseWithResolvers.js";
 import { createTestEventSource } from "./test-utils/createTestEventSource.js";
 import { waitFor } from "@testing-library/dom";
+import { afterTest } from "@dom-preview/ui/src/test-utils/afterTest.js";
+import { createTestServer } from "./test-utils/createTestServer.js";
 
 describe("main", () => {
-  let port = 0;
-  beforeEach(async () => {
+  async function createTestDomPreviewServer(
+    args: Partial<DomPreviewServerArgs> = {},
+  ) {
     const server = await runDomPreviewServer({
       port: 0,
       staticFilesDir: path.resolve(import.meta.dirname, "main.test.resources"),
+      ...args,
     });
-    port = server.port;
-    return () => {
-      server.shutdown();
-    };
-  });
+    afterTest(() => server.shutdown());
+    return { port: server.port };
+  }
 
   it("delivers the index.html page", async () => {
+    const { port } = await createTestDomPreviewServer();
     const response = await fetch(`http://localhost:${port}/__dom-preview__/`);
     const html = await response.text();
     await assertHtml(html, "<html><body>Hello</body></html>");
   });
 
   it("'events'-endpoint delivers added dom-previews ", async () => {
+    const { port } = await createTestDomPreviewServer();
     const { capturedEvents } = await createTestEventSource(
       `http://localhost:${port}/__dom-preview__/api/stream/previews`,
     );
-    await postDomPreview({
+    await postDomPreview(port, {
       html: "<html><body>Hello Main</body>",
     });
     await waitFor(() => {
@@ -47,6 +56,7 @@ describe("main", () => {
   });
 
   it("'events'-endpoint generates different ids for each dom-preview", async () => {
+    const { port } = await createTestDomPreviewServer();
     const totalIds = 3;
     const ids = new Set<string>();
     let pendingIds = totalIds;
@@ -64,7 +74,7 @@ describe("main", () => {
     });
 
     for (let i = 0; i < totalIds; i++) {
-      await postDomPreview({
+      await postDomPreview(port, {
         html: "<html><body>Hello Main</body>",
       });
     }
@@ -73,10 +83,11 @@ describe("main", () => {
   });
 
   it("events-endpoint sends existing previews on connecting", async () => {
-    await postDomPreview({
+    const { port } = await createTestDomPreviewServer();
+    await postDomPreview(port, {
       html: "<html><body>Hello Main 1</body>",
     });
-    await postDomPreview({
+    await postDomPreview(port, {
       html: "<html><body>Hello Main 2</body>",
     });
     const { capturedEvents } = await createTestEventSource(
@@ -96,12 +107,25 @@ describe("main", () => {
     });
   });
 
-  it.todo("proxies to configured URL as fallback");
+  it("proxies to configured URL as fallback", async () => {
+    const { port: backendPort } = await createTestServer((req, res) =>
+      res.end("backend response = " + req.url),
+    );
+    const { port } = await createTestDomPreviewServer({
+      proxyUnknownRequestsTo: `http://localhost:${backendPort}`,
+    });
+
+    const response = await fetch(`http://localhost:${port}/some-file`);
+    expect(await response.text()).toEqual("backend response = /some-file");
+  });
 
   it.todo("prints a info message after startup");
   it.todo("opens the browser");
 
-  async function postDomPreview(partial: Partial<DomPreviewCreate>) {
+  async function postDomPreview(
+    port: number,
+    partial: Partial<DomPreviewCreate>,
+  ) {
     await fetch(`http://localhost:${port}/__dom-preview__/api/previews`, {
       method: "POST",
       body: JSON.stringify(createDomPreviewCreate(partial)),

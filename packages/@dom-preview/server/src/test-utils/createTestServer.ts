@@ -21,6 +21,7 @@ export async function createTestServer(
 
   return {
     baseUrl,
+    port,
     fetchResponse,
     async fetchText(path: string, init?: RequestInit): Promise<string> {
       return (await fetchResponse(path, init)).text();

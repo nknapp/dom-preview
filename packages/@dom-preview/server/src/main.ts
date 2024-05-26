@@ -9,11 +9,13 @@ import { createPostPreviewsHandler } from "./endpoints/createPostPreviewsHandler
 import { ReqResHandler } from "./utils/asReqResHandler.js";
 import { createPrefixRouter, createSimpleRouter } from "./endpoints/router.js";
 import { logInfo } from "./utils/logger.js";
+import { createProxy } from "./endpoints/proxy.js";
 
 export type { DomPreview, DomPreviewCreate } from "./model/DomPreview.js";
 
 export interface DomPreviewServerArgs {
   staticFilesDir?: string;
+  proxyUnknownRequestsTo?: string;
   port: number;
 }
 
@@ -25,6 +27,7 @@ export interface DomPreviewServer {
 export async function runDomPreviewServer({
   port,
   staticFilesDir,
+  proxyUnknownRequestsTo,
 }: DomPreviewServerArgs): Promise<DomPreviewServer> {
   const store = new DomPreviewStore();
   const serverSideEvents = createPreviewStreamHandler(store);
@@ -33,9 +36,13 @@ export async function runDomPreviewServer({
       "/__dom-preview__/": createSimpleRouter({
         "GET /api/stream/previews": serverSideEvents.handleRequest,
         "POST /api/previews": createPostPreviewsHandler(store),
-        "*": createStaticFilesHandler(staticFilesDir),
+        "*": staticFilesDir
+          ? sirv(staticFilesDir)
+          : response404("Static file delivery is disabled."),
       }),
-      "*": (req, res) => res.end("fallback"),
+      "*": proxyUnknownRequestsTo
+        ? createProxy(proxyUnknownRequestsTo)
+        : response404("Proxy target is disabled."),
     }),
   );
 
@@ -59,14 +66,11 @@ function getPort(address: string | AddressInfo | null) {
   return address.port;
 }
 
-function createStaticFilesHandler(staticFilesDir: undefined | string) {
-  const serveStaticFiles: ReqResHandler = staticFilesDir
-    ? sirv(staticFilesDir)
-    : (req, res) => {
-        res.statusCode = 404;
-        res.end(`Static file delivery is disabled. Not found: ${req.url}`);
-      };
-  return serveStaticFiles;
+function response404(messagePrefix: string): ReqResHandler {
+  return (req, res) => {
+    res.statusCode = 404;
+    res.end(`${messagePrefix} Not found: ${req.url}`);
+  };
 }
 
 function createPreviewStreamHandler(store: DomPreviewStore) {

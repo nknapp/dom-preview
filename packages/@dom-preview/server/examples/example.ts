@@ -2,8 +2,13 @@ import { runDomPreviewServer, type DomPreviewCreate } from "../src/main.js";
 
 // Put your frontend files into ./static-files
 const { shutdown } = await runDomPreviewServer({
+  // Listening port
   port: 5007,
+  // Deliver the web-frontend for "dom-preview"
   staticFilesDir: "./static-files",
+  // You can proxy requests to the running dev-server (e.g. vite) to retrieve assets
+  // For security reasons, only localhost is allowed for now
+  proxyUnknownRequestsTo: `http://localhost:5173`,
 });
 
 process.on("SIGINT", () => {
