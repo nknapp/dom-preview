@@ -1,15 +1,15 @@
 import { AddressInfo } from "node:net";
 
 import sirv from "sirv";
-import { createServer } from "node:http";
+import { createServer, IncomingMessage, ServerResponse } from "node:http";
 
 import { DomPreviewSse } from "./endpoints/DomPreviewSse.js";
 import { DomPreviewStore } from "./store/DomPreviewStore.js";
 import { createPostPreviewsHandler } from "./endpoints/createPostPreviewsHandler.js";
-import { ReqResHandler } from "./utils/asReqResHandler.js";
 import { createPrefixRouter, createSimpleRouter } from "./endpoints/router.js";
 import { logInfo } from "./utils/logger.js";
 import { createProxy } from "./endpoints/proxy.js";
+import { ReqResHandler } from "./endpoints/ReqResHandler.js";
 
 export type { DomPreview, DomPreviewCreate } from "./model/DomPreview.js";
 
@@ -32,19 +32,21 @@ export async function runDomPreviewServer({
   const store = new DomPreviewStore();
   const serverSideEvents = createPreviewStreamHandler(store);
   const server = createServer(
-    logRequests(
-      createPrefixRouter({
-        "/__dom-preview__/": createSimpleRouter({
-          "GET /api/stream/previews": serverSideEvents.handleRequest,
-          "POST /api/previews": createPostPreviewsHandler(store),
-          "*": staticFilesDir
-            ? sirv(staticFilesDir)
-            : response404("Static file delivery is disabled."),
+    toNodeJs(
+      logRequests(
+        createPrefixRouter({
+          "/__dom-preview__/": createSimpleRouter({
+            "GET /api/stream/previews": serverSideEvents.handleRequest,
+            "POST /api/previews": createPostPreviewsHandler(store),
+            "*": staticFilesDir
+              ? fromNodeJs(sirv(staticFilesDir))
+              : response404("Static file delivery is disabled."),
+          }),
+          "*": proxyUnknownRequestsTo
+            ? createProxy(proxyUnknownRequestsTo)
+            : response404("Proxy target is disabled."),
         }),
-        "*": proxyUnknownRequestsTo
-          ? createProxy(proxyUnknownRequestsTo)
-          : response404("Proxy target is disabled."),
-      }),
+      ),
     ),
   );
 
@@ -69,7 +71,7 @@ function getPort(address: string | AddressInfo | null) {
 }
 
 function response404(messagePrefix: string): ReqResHandler {
-  return (req, res) => {
+  return ({ req, res }) => {
     res.statusCode = 404;
     res.end(`${messagePrefix} Not found: ${req.url}`);
   };
@@ -77,7 +79,7 @@ function response404(messagePrefix: string): ReqResHandler {
 
 function createPreviewStreamHandler(store: DomPreviewStore) {
   const serverSideEvents = new DomPreviewSse({
-    onConnection: (req, res) => {
+    onConnection: ({ res }) => {
       for (const domPreview of store.domPreviews) {
         DomPreviewSse.writePreviewToResponse(domPreview, res);
       }
@@ -90,8 +92,22 @@ function createPreviewStreamHandler(store: DomPreviewStore) {
 }
 
 function logRequests(handler: ReqResHandler): ReqResHandler {
-  return (req, res) => {
+  return (...args) => {
+    const req = args[0].req;
     logInfo(`${new Date().toISOString()} ${req.method} ${req.url}`);
-    handler(req, res);
+    handler(...args);
   };
+}
+
+export type NodeJsRequestHandler = (
+  req: IncomingMessage,
+  res: ServerResponse,
+) => void;
+
+function fromNodeJs(handler: NodeJsRequestHandler): ReqResHandler {
+  return ({ req, res }) => handler(req, res);
+}
+
+function toNodeJs(handler: ReqResHandler): NodeJsRequestHandler {
+  return (req, res) => handler({ req, res });
 }

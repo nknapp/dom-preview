@@ -96,7 +96,7 @@ interface CapturedRequest {
 
 async function createProxyWithBackend() {
   const capturedRequests: CapturedRequest[] = [];
-  const { port: backendPort } = await createTestServer((req, res) => {
+  const { port: backendPort } = await createTestServer(({ req, res }) => {
     capturedRequests.push(asCapturedRequest(req));
     res.end("backend response");
   });

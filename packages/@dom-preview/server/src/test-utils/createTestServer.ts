@@ -1,12 +1,8 @@
-import {
-  createServer,
-  IncomingMessage,
-  Server,
-  ServerResponse,
-} from "node:http";
+import { createServer, Server } from "node:http";
+import { ReqResOptions } from "../endpoints/ReqResHandler.js";
 
 export async function createTestServer(
-  handler: (req: IncomingMessage, res: ServerResponse) => void,
+  handler: (options: ReqResOptions) => void,
 ) {
   const server = await startServer(handler);
   const port = getPort(server);
@@ -32,11 +28,9 @@ export async function createTestServer(
   };
 }
 
-async function startServer(
-  handler: (req: IncomingMessage, res: ServerResponse) => void,
-) {
+async function startServer(handler: (options: ReqResOptions) => void) {
   const server = createServer(async (req, res) => {
-    handler(req, res);
+    handler({ req, res });
   });
   await new Promise<void>((resolve) =>
     server.listen({ port: 0, host: "localhost" }, resolve),

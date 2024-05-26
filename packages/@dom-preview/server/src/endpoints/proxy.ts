@@ -15,7 +15,7 @@ export function createProxy(baseUrl: string): ReqResHandler {
   if (!allowedProtocols.has(url.protocol)) {
     throw new Error("Only proxying to 'http://localhost/*' is supported.");
   }
-  return async (req, res) => {
+  return async ({ req, res }) => {
     try {
       const headers = unwrapSingleItemArrays(req.headersDistinct);
 

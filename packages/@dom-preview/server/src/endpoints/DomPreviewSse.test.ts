@@ -9,9 +9,7 @@ import { createTestEventSource } from "../test-utils/createTestEventSource.js";
 describe("update-sse", () => {
   it("sends preview-added events to multiple clients", async () => {
     const sse = new DomPreviewSse();
-    const { baseUrl } = await createTestServer((req, res) => {
-      sse.handleRequest(req, res);
-    });
+    const { baseUrl } = await createTestServer(sse.handleRequest);
     const { capturedEvents: capturedEvents1 } =
       await createTestEventSource(baseUrl);
     const { capturedEvents: capturedEvents2 } =
@@ -31,9 +29,7 @@ describe("update-sse", () => {
 
   it("clears closed sockets", async () => {
     const sse = new DomPreviewSse();
-    const { baseUrl } = await createTestServer((req, res) => {
-      sse.handleRequest(req, res);
-    });
+    const { baseUrl } = await createTestServer(sse.handleRequest);
     const { eventSource } = await createTestEventSource(baseUrl);
     eventSource.close();
     await delay(200);
@@ -45,13 +41,11 @@ describe("update-sse", () => {
   it("calls callback on new connection", async () => {
     const domPreview = createDomPreview({ alias: "test-preview" });
     const sse = new DomPreviewSse({
-      onConnection: (req, res) => {
+      onConnection: ({ res }) => {
         DomPreviewSse.writePreviewToResponse(domPreview, res);
       },
     });
-    const { baseUrl } = await createTestServer((req, res) => {
-      sse.handleRequest(req, res);
-    });
+    const { baseUrl } = await createTestServer(sse.handleRequest);
     const { capturedEvents } = await createTestEventSource(baseUrl);
     await waitFor(() => {
       expect(capturedEvents).toEqual([domPreview]);

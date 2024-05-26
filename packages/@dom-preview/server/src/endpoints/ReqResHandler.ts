@@ -1,3 +1,8 @@
 import { IncomingMessage, ServerResponse } from "node:http";
 
-export type ReqResHandler = (res: IncomingMessage, req: ServerResponse) => void;
+export type ReqResOptions = {
+  req: IncomingMessage;
+  res: ServerResponse;
+};
+
+export type ReqResHandler = (options: ReqResOptions) => void;

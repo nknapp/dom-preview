@@ -67,7 +67,7 @@ describe("createPrefixRouter", () => {
 
   it("removes the prefix from the url when calling the handler", async () => {
     const { fetchText } = await prefix({
-      "/test/": (req, res) => res.end("req.url = " + req.url),
+      "/test/": ({ req, res }) => res.end("req.url = " + req.url),
       "*": returning("star"),
     });
     expect(await fetchText("/test/abc")).toEqual("req.url = /abc");
@@ -79,7 +79,7 @@ describe("createPrefixRouter", () => {
 });
 
 function returning(result: string): ReqResHandler {
-  return (req, res) => {
+  return ({ res }) => {
     res.end(result);
   };
 }

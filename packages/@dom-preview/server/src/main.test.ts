@@ -107,7 +107,7 @@ describe("main", () => {
   });
 
   it("proxies to configured URL as fallback", async () => {
-    const { port: backendPort } = await createTestServer((req, res) =>
+    const { port: backendPort } = await createTestServer(({ req, res }) =>
       res.end("backend response = " + req.url),
     );
     const { port } = await createTestDomPreviewServer({

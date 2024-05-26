@@ -1,7 +1,7 @@
-import { IncomingMessage, ServerResponse } from "node:http";
+import { ServerResponse } from "node:http";
 import { DomPreview } from "../model/DomPreview.js";
 import { logInfo } from "../utils/logger.js";
-import { ReqResHandler } from "./ReqResHandler.js";
+import { ReqResHandler, ReqResOptions } from "./ReqResHandler.js";
 
 export interface DomPreviewSseOptions {
   onConnection?: ReqResHandler;
@@ -16,11 +16,11 @@ export class DomPreviewSse {
     this.handleRequest = this.handleRequest.bind(this);
   }
 
-  handleRequest(req: IncomingMessage, res: ServerResponse) {
+  handleRequest({ req, res }: ReqResOptions) {
     res.setHeader("X-Accel-Buffering", "no");
     res.setHeader("Content-Type", "text/event-stream");
     res.write("");
-    this.options.onConnection?.(req, res);
+    this.options.onConnection?.({ req, res });
     this.pendingResponses.add(res);
     res.on("close", () => {
       logInfo("Connection closed from " + res.req.socket.remoteAddress);

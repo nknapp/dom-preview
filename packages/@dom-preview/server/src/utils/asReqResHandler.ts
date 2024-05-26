@@ -1,14 +1,14 @@
-import { IncomingMessage, ServerResponse } from "node:http";
+import { IncomingMessage } from "node:http";
 import { pipeResponse } from "./pipeResponse.js";
 import { logError } from "./logger.js";
+import { ReqResHandler } from "../endpoints/ReqResHandler.js";
 
 export type WebResponseHandler = (
   res: IncomingMessage,
 ) => Promise<Response | null>;
-export type ReqResHandler = (res: IncomingMessage, req: ServerResponse) => void;
 
 export function asReqResHandler(handler: WebResponseHandler): ReqResHandler {
-  return async (req, res) => {
+  return async ({ req, res }) => {
     try {
       const webResponse = await handler(req);
       assertNotNull(webResponse);
