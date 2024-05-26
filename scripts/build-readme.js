@@ -1,7 +1,6 @@
 import packageJson from "../package.json" assert { type: "json" };
 import { editFile } from "./tools/editFile.js";
 import fs from "node:fs";
-import path from "node:path";
 
 function fences(type, contents) {
   return "```" + type + "\n" + contents + "\n```";

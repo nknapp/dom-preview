@@ -5,7 +5,6 @@ import {
 } from "./createPostPreviewsHandler.js";
 import { DomPreviewStore } from "../store/DomPreviewStore.js";
 import { createDomPreview } from "../model/DomPreview.test-helper.js";
-import { DomPreview } from "../model/DomPreview.js";
 
 describe("PreviewsEndpoint", async () => {
   it("stores a valid preview json", async () => {
