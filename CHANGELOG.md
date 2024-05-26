@@ -2,6 +2,10 @@
 
 # Upcoming
 
+# v0.3.2
+
+Date: 2024-05-26T21:15:42.442Z
+
 - Print info message after servers startup
 
 # v0.3.1
