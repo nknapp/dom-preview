@@ -10,7 +10,7 @@ describe("eventsMock", () => {
   it("emits sse events", async () => {
     const sink: DomPreview[] = [];
     const eventSourceURL = new URL(
-      "/api/stream/previews",
+      "__dom-preview__/api/stream/previews",
       window.location.href,
     );
     const eventSource = new EventSource(eventSourceURL.href);

@@ -1,6 +1,5 @@
 import {
   DomPreviewCreate,
-  DomPreviewServer,
   DomPreviewServerArgs,
   runDomPreviewServer,
 } from "./main.js";

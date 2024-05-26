@@ -8,8 +8,8 @@
   "scripts": {
     "dev": "run-p dev:*",
     "dev:unit": "WATCH_DOM_PREVIEW=true vitest --ui",
-    "dev:server": "vite",
-    "dev:dom-preview": "dom-preview",
+    "dev:server": "vite --port=5173",
+    "dev:dom-preview": "dom-preview --proxy-to=5173",
     "test:unit": "vitest run --watch=false",
     "test": "run-p test:*"
   },

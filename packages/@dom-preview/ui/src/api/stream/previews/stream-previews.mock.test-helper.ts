@@ -16,7 +16,7 @@ export function mockEventsEndpoint(): MockEventsEndpointReturn {
   const streamControllers = new Set<ReadableStreamDefaultController>();
 
   const handler = http.get(
-    "http://localhost/api/stream/previews",
+    "http://localhost/__dom-preview__/api/stream/previews",
     ({ request }) => {
       const stream = new ReadableStream({
         start(streamController) {

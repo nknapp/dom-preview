@@ -5,7 +5,7 @@ import { DomPreviewCreate } from "@dom-preview/server";
 export const errors: Error[] = [];
 
 export function debug(alias: string | undefined): void {
-  fetch(`http://localhost:${serverPort}/api/previews`, {
+  fetch(`http://localhost:${serverPort}/__dom-preview__/api/previews`, {
     method: "POST",
     body: JSON.stringify({
       html: document.documentElement.outerHTML,
@@ -17,4 +17,13 @@ export function debug(alias: string | undefined): void {
   }).catch((error) => {
     errors.push(error);
   });
+}
+
+export function showDomPreviewErrors() {
+  for (const error of errors) {
+    // eslint-disable-next-line no-console
+    console.log(error);
+  }
+  if (errors.length > 0)
+    throw new Error("Error while sending dom-previews to the server");
 }

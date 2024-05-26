@@ -5,7 +5,7 @@ import { logError } from "@/utils/logger.ts";
 const originalFetch = fetch;
 
 export function debugInPlayMode(alias: string | null = null) {
-  originalFetch("http://localhost:5007/api/previews", {
+  originalFetch("http://localhost:5007/__dom-previews__/api/previews", {
     method: "POST",
     body: JSON.stringify({
       html: document.documentElement.outerHTML,

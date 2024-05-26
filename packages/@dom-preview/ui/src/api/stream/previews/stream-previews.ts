@@ -8,7 +8,10 @@ export async function domPreviewLiveUpdate() {
       upsertDomPreview(preview);
     }
   });
-  const eventSourceURL = new URL("/api/stream/previews", window.location.href);
+  const eventSourceURL = new URL(
+    "/__dom-preview__/api/stream/previews",
+    window.location.href,
+  );
   const eventSource = new EventSource(eventSourceURL.href);
   eventSource.addEventListener("preview-added", (event) => {
     const domPreview = JSON.parse(event.data) as DomPreview;

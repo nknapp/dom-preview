@@ -32,18 +32,20 @@ export async function runDomPreviewServer({
   const store = new DomPreviewStore();
   const serverSideEvents = createPreviewStreamHandler(store);
   const server = createServer(
-    createPrefixRouter({
-      "/__dom-preview__/": createSimpleRouter({
-        "GET /api/stream/previews": serverSideEvents.handleRequest,
-        "POST /api/previews": createPostPreviewsHandler(store),
-        "*": staticFilesDir
-          ? sirv(staticFilesDir)
-          : response404("Static file delivery is disabled."),
+    logRequests(
+      createPrefixRouter({
+        "/__dom-preview__/": createSimpleRouter({
+          "GET /api/stream/previews": serverSideEvents.handleRequest,
+          "POST /api/previews": createPostPreviewsHandler(store),
+          "*": staticFilesDir
+            ? sirv(staticFilesDir)
+            : response404("Static file delivery is disabled."),
+        }),
+        "*": proxyUnknownRequestsTo
+          ? createProxy(proxyUnknownRequestsTo)
+          : response404("Proxy target is disabled."),
       }),
-      "*": proxyUnknownRequestsTo
-        ? createProxy(proxyUnknownRequestsTo)
-        : response404("Proxy target is disabled."),
-    }),
+    ),
   );
 
   server.listen(port);
@@ -85,4 +87,11 @@ function createPreviewStreamHandler(store: DomPreviewStore) {
     serverSideEvents.previewAdded(preview);
   });
   return serverSideEvents;
+}
+
+function logRequests(handler: ReqResHandler): ReqResHandler {
+  return (req, res) => {
+    logInfo(`${new Date().toISOString()} ${req.method} ${req.url}`);
+    handler(req, res);
+  };
 }

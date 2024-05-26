@@ -24,9 +24,10 @@
     "clean": "npm run clean --workspaces --if-present",
     "version": "node ./scripts/on-version-bump.js",
     "bump:minor": "npm version minor -ws",
-    "play:server": "npm run dev:server --workspace=packages/@dom-preview/server",
+    "play:server": "npm run dev:server --workspace=packages/@dom-preview/server -- --proxyUnknownRequestsTo=http://localhost:5273 --staticFilesDir=../ui/dist",
     "play:ui": "npm run dev:server --workspace=packages/@dom-preview/ui",
     "play:playground": "npm run dev:unit --workspace=playground",
+    "play:playground-server": "npm run dev:server --workspace=playground -- --port=5273",
     "play": "run-p play:*",
     "preversion": "npm run build && npm run test",
     "postversion": "npm publish -ws && git push origin main --tags"
