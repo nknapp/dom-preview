@@ -2,6 +2,10 @@
 
 # Upcoming
 
+# v0.3.0
+
+Date: 2024-05-26T18:27:35.166Z
+
 - Add `--proxy-to=<url>` option to the dev-derver, in order to load assets from a running dev-server
 
 # v0.2.2
