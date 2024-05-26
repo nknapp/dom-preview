@@ -22,8 +22,6 @@ export function debug(alias: string | undefined): void {
 export function showDomPreviewErrors() {
   for (const error of errors) {
     // eslint-disable-next-line no-console
-    console.log(error);
+    console.log("Error sending dom-preview to server:", error);
   }
-  if (errors.length > 0)
-    throw new Error("Error while sending dom-previews to the server");
 }
