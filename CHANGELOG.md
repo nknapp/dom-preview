@@ -2,6 +2,10 @@
 
 # Upcoming
 
+# v0.3.1
+
+Date: 2024-05-26T18:53:35.236Z
+
 - Fix: Set response content type in proxy response
 
 # v0.3.0
