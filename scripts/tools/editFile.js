@@ -13,3 +13,7 @@ export async function editFile(path, editCommand) {
   cp.execSync("npx prettier -w " + path, { stdio: "inherit" });
   cp.execSync("git add " + path, { stdio: "inherit" });
 }
+
+export async function editFiles(files, editCommand) {
+  return Promise.all(files.map((file) => editFile(file, editCommand)));
+}

@@ -1,5 +1,5 @@
 import packageJson from "../package.json" assert { type: "json" };
-import { editFile } from "./tools/editFile.js";
+import { editFiles } from "./tools/editFile.js";
 import fs from "node:fs";
 
 function fences(type, contents) {
@@ -14,7 +14,7 @@ function npmPackage(name) {
   return `[${name}](https://npmjs.com/package/${name})`;
 }
 
-await editFile("README.md", () => {
+await editFiles(["README.md", "./packages/dom-preview/README.md"], () => {
   return `
 # dom-preview
 
