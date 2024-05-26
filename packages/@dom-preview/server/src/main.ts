@@ -60,13 +60,21 @@ export async function runDomPreviewServer({
     ),
   );
 
-  server.listen(port);
+  await new Promise<void>((resolve) =>
+    server.listen(port, "localhost", resolve),
+  );
+  const actualPort = getPort(server.address());
+  logInfo(`
+The "dom-preview" server is listening on port ${actualPort}
+Web frontend is being served at http://localhost:${actualPort}/__dom-preview__/
+`);
+
   return {
     shutdown(): void {
       logInfo("Closing server");
       server.close();
     },
-    port: getPort(server.address()),
+    port: actualPort,
   };
 }
 

@@ -16,6 +16,7 @@ import { createTestEventSource } from "./test-utils/createTestEventSource.js";
 import { waitFor } from "@testing-library/dom";
 import { afterTest } from "@dom-preview/ui/src/test-utils/afterTest.js";
 import { createTestServer } from "./test-utils/createTestServer.js";
+import { logInfo } from "./utils/logger.js";
 
 describe("main", () => {
   async function createTestDomPreviewServer(
@@ -183,7 +184,13 @@ describe("main", () => {
     });
   });
 
-  it.todo("prints a info message after startup");
+  it("prints a info message after startup", async () => {
+    const { port } = await createTestDomPreviewServer({});
+    expect(logInfo).toHaveBeenCalledWith(`
+The "dom-preview" server is listening on port ${port}
+Web frontend is being served at http://localhost:${port}/__dom-preview__/
+`);
+  });
   it.todo("opens the browser");
 
   async function postDomPreview(
