@@ -2,6 +2,8 @@
 
 # Upcoming
 
+- Add "setDomPreviewContext" to set the context name
+
 # v0.3.2
 
 Date: 2024-05-26T21:15:42.442Z

@@ -84,7 +84,29 @@ As a workaround, the server has the ability to proxy all requests that do not go
 to another URL. You can do this by using the option \`--proxy-to=<url>\`:
 
 * Run your usual vite- or webpack-dev-server on port '5173'
-* Run \`npx dom-preview --proxy-to-http://localhost:4000\` 
+* Run \`npx dom-preview --proxy-to-http://localhost:4000\`
+
+### Context
+
+A preview can have context.  \`dom-preview\` does not make assumptions about what it is. It is just a string.
+In the UI it is used to group tests together.
+
+The intended use is to store the name of the currrent test. In vitest, you can use configure a "setupFile":
+
+${fences(
+  "javascript",
+  `
+test: {
+  css: true,
+  globals: true,
+  setupFiles: ["./src/setupTests,js"]
+}
+`,
+)}
+
+and then create "setupTests" like this:
+
+${include("javascript", "playground/setupTests.js")}
 
 ## Optimal setup for vite
 

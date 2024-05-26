@@ -28,6 +28,8 @@ export default [
       "**/*.test.js",
       "**/test-utils/",
       "**/*.test-helper.ts",
+      "**/setupTests.ts",
+      "**/setupTests.js",
     ],
     languageOptions: {
       globals: globals.jest,

@@ -4,6 +4,8 @@ import { DomPreviewCreate } from "@dom-preview/server";
 
 export const errors: Error[] = [];
 
+let context = "initial";
+
 export function debug(alias: string | undefined): void {
   fetch(`http://localhost:${serverPort}/__dom-preview__/api/previews`, {
     method: "POST",
@@ -12,11 +14,15 @@ export function debug(alias: string | undefined): void {
       alias,
       timestamp: Date.now(),
       inputValues: gatherInputValues(),
-      context: "default",
+      context: context,
     } satisfies DomPreviewCreate),
   }).catch((error) => {
     errors.push(error);
   });
+}
+
+export function setDomPreviewContext(contextName: string): void {
+  context = contextName;
 }
 
 export function showDomPreviewErrors() {
