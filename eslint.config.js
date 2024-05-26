@@ -34,8 +34,8 @@ export default [
     },
   },
   {
-    files: ["scripts/"],
-    languageOptions: { globals: globals.node },
+    files: ["scripts/*"],
+    languageOptions: { globals: { ...globals.node } },
   },
   {
     files: ["packages/@dom-preview/server"],
