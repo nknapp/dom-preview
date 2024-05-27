@@ -27,6 +27,8 @@ export function createProxy(baseUrl: string): ReqResHandler {
         if (values == null) continue;
         res.setHeader(name, values);
       }
+      res.statusMessage = backendResponse.statusMessage ?? "OK";
+      res.statusCode = backendResponse.statusCode ?? 200;
 
       await pipeline(backendResponse, res);
     } catch (error) {

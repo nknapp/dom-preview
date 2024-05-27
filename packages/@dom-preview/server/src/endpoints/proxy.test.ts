@@ -71,6 +71,19 @@ describe("proxy", () => {
     expect(response.headersDistinct["x-custom-header"]).toEqual(["a", "b"]);
   });
 
+  it("applies response status", async () => {
+    const { port } = await createProxyWithBackend(({ res }) => {
+      res.setHeader("x-custom-header", ["a", "b"]);
+      res.statusCode = 304;
+      res.statusMessage = "Not Modified";
+      res.end();
+    });
+
+    const response = await getViaNodeHttpAgent(`http://localhost:${port}/`);
+    expect.soft(response.statusCode).toEqual(304);
+    expect(response.statusMessage).toEqual("Not Modified");
+  });
+
   it.each`
     proxyUrl
     ${"http://example.com"}
