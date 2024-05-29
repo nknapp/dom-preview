@@ -3,21 +3,21 @@ import { DomPreview } from "../model/DomPreview.js";
 import { logInfo } from "../utils/logger.js";
 import { ReqResOptions } from "./ReqResHandler.js";
 
-export interface SseEvents {
+export interface SseEventsMap {
   "preview-added": DomPreview;
   "previews-cleared": Record<string, never>;
 }
 
-export interface SseResponseHandler {
-  send<T extends keyof SseEvents>(event: T, data: SseEvents[T]): void;
+export interface SseEventEmitter {
+  send<T extends keyof SseEventsMap>(event: T, data: SseEventsMap[T]): void;
 }
 
 export interface DomPreviewSseOptions {
-  onConnection?: (handler: SseResponseHandler) => Promise<void> | void;
+  onConnection?: (handler: SseEventEmitter) => Promise<void> | void;
 }
 
-export class DomPreviewSse {
-  pendingResponses = new Set<SseResponseHandler>();
+export class DomPreviewSse implements SseEventEmitter {
+  pendingResponses = new Set<SseEventEmitter>();
   options: DomPreviewSseOptions;
 
   constructor(options: DomPreviewSseOptions = {}) {
@@ -39,20 +39,14 @@ export class DomPreviewSse {
     });
   }
 
-  previewAdded(domPreview: DomPreview) {
-    for (const response of this.pendingResponses) {
-      response.send("preview-added", domPreview);
-    }
-  }
-
-  previewsCleared(): void {
+  send<T extends keyof SseEventsMap>(event: T, data: SseEventsMap[T]): void {
     for (const handler of this.pendingResponses) {
-      handler.send("previews-cleared", {});
+      handler.send(event, data);
     }
   }
 }
 
-function createSseResponseHandler(res: ServerResponse): SseResponseHandler {
+function createSseResponseHandler(res: ServerResponse): SseEventEmitter {
   return {
     send(event, data) {
       res.write(`event: ${event}\n`);

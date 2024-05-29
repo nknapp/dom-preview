@@ -142,5 +142,12 @@ describe("domPreview", () => {
       store.clear();
       expect(store.domPreviews).toHaveLength(0);
     });
+    it("emits 'previews-cleared' event", () => {
+      const listener = vi.fn();
+      const store = new DomPreviewStore();
+      store.addListener("previews-cleared", listener);
+      store.clear();
+      expect(listener).toHaveBeenCalledTimes(1);
+    });
   });
 });

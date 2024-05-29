@@ -106,7 +106,10 @@ function createPreviewStreamHandler(store: DomPreviewStore) {
     },
   });
   store.on("preview-added", (preview) => {
-    serverSideEvents.previewAdded(preview);
+    serverSideEvents.send("preview-added", preview);
+  });
+  store.on("previews-cleared", () => {
+    serverSideEvents.send("previews-cleared", {});
   });
   return serverSideEvents;
 }

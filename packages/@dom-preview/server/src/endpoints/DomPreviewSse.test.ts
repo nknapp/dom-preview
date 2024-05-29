@@ -15,7 +15,10 @@ describe("update-sse", () => {
     const { previewAddedEvents: previewAddedEvents2 } =
       await createTestEventSource(baseUrl);
 
-    sse.previewAdded(createDomPreview({ alias: "test-preview", id: "my-id" }));
+    sse.send(
+      "preview-added",
+      createDomPreview({ alias: "test-preview", id: "my-id" }),
+    );
 
     await waitFor(() => {
       expect(previewAddedEvents1).toContainEqual(
@@ -33,7 +36,7 @@ describe("update-sse", () => {
     const { eventSource } = await createTestEventSource(baseUrl);
     eventSource.close();
     await delay(200);
-    sse.previewAdded(createDomPreview({ alias: "test-preview" }));
+    sse.send("preview-added", createDomPreview({ alias: "test-preview" }));
     await delay(200);
     // if no error occurs so far, everything is fine
   });
@@ -52,11 +55,11 @@ describe("update-sse", () => {
     });
   });
 
-  it("sends 'clear' event when", async () => {
+  it("sends 'previews-cleared' event", async () => {
     const sse = new DomPreviewSse();
     const { baseUrl } = await createTestServer(sse.handleRequest);
     const { previewsClearedEvents } = await createTestEventSource(baseUrl);
-    sse.previewsCleared();
+    sse.send("previews-cleared", {});
     await waitFor(() => {
       expect(previewsClearedEvents).toEqual([{}]);
     });

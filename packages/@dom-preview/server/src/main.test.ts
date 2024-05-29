@@ -107,6 +107,18 @@ describe("main", () => {
       await delay(10);
       expect(previewAddedEvents).toHaveLength(0);
     });
+
+    it("sends a 'previews-cleared' event to all listeners", async () => {
+      const { port } = await createTestDomPreviewServer();
+      const { previewsClearedEvents } = await createTestEventSource(
+        `http://localhost:${port}/__dom-preview__/api/stream/previews`,
+      );
+      await fetch(`http://localhost:${port}/__dom-preview__/api/previews`, {
+        method: "DELETE",
+      });
+      await delay(10);
+      expect(previewsClearedEvents).toHaveLength(1);
+    });
   });
 
   describe("/__dom-preview__/stream/previews", () => {

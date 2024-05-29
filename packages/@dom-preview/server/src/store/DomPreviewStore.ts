@@ -3,6 +3,7 @@ import EventEmitter from "node:events";
 
 interface DomPreviewEvents {
   "preview-added": [domPreview: DomPreview];
+  "previews-cleared": [];
 }
 
 let idCounter = 0;
@@ -29,5 +30,6 @@ export class DomPreviewStore extends EventEmitter<DomPreviewEvents> {
 
   clear(): void {
     this.domPreviews.splice(0, this.domPreviews.length);
+    this.emit("previews-cleared");
   }
 }
