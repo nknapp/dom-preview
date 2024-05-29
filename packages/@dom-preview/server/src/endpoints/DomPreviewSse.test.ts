@@ -10,18 +10,18 @@ describe("update-sse", () => {
   it("sends preview-added events to multiple clients", async () => {
     const sse = new DomPreviewSse();
     const { baseUrl } = await createTestServer(sse.handleRequest);
-    const { capturedEvents: capturedEvents1 } =
+    const { previewAddedEvents: previewAddedEvents1 } =
       await createTestEventSource(baseUrl);
-    const { capturedEvents: capturedEvents2 } =
+    const { previewAddedEvents: previewAddedEvents2 } =
       await createTestEventSource(baseUrl);
 
     sse.previewAdded(createDomPreview({ alias: "test-preview", id: "my-id" }));
 
     await waitFor(() => {
-      expect(capturedEvents1).toContainEqual(
+      expect(previewAddedEvents1).toContainEqual(
         createDomPreview({ alias: "test-preview", id: "my-id" }),
       );
-      expect(capturedEvents2).toContainEqual(
+      expect(previewAddedEvents2).toContainEqual(
         createDomPreview({ alias: "test-preview", id: "my-id" }),
       );
     });
@@ -41,16 +41,24 @@ describe("update-sse", () => {
   it("calls callback on new connection", async () => {
     const domPreview = createDomPreview({ alias: "test-preview" });
     const sse = new DomPreviewSse({
-      onConnection: ({ res }) => {
-        DomPreviewSse.writePreviewToResponse(domPreview, res);
+      onConnection: (handler) => {
+        handler.send("preview-added", domPreview);
       },
     });
     const { baseUrl } = await createTestServer(sse.handleRequest);
-    const { capturedEvents } = await createTestEventSource(baseUrl);
+    const { previewAddedEvents } = await createTestEventSource(baseUrl);
     await waitFor(() => {
-      expect(capturedEvents).toEqual([domPreview]);
+      expect(previewAddedEvents).toEqual([domPreview]);
     });
   });
 
-  it.todo("multiple connections");
+  it("sends 'clear' event when", async () => {
+    const sse = new DomPreviewSse();
+    const { baseUrl } = await createTestServer(sse.handleRequest);
+    const { previewsClearedEvents } = await createTestEventSource(baseUrl);
+    sse.previewsCleared();
+    await waitFor(() => {
+      expect(previewsClearedEvents).toEqual([{}]);
+    });
+  });
 });

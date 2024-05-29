@@ -101,25 +101,25 @@ describe("main", () => {
         },
       );
       expect(response.status).toEqual(204);
-      const { capturedEvents } = await createTestEventSource(
+      const { previewAddedEvents } = await createTestEventSource(
         `http://localhost:${port}/__dom-preview__/api/stream/previews`,
       );
       await delay(10);
-      expect(capturedEvents).toHaveLength(0);
+      expect(previewAddedEvents).toHaveLength(0);
     });
   });
 
   describe("/__dom-preview__/stream/previews", () => {
     it("streaming-endpoint delivers added dom-previews ", async () => {
       const { port } = await createTestDomPreviewServer();
-      const { capturedEvents } = await createTestEventSource(
+      const { previewAddedEvents } = await createTestEventSource(
         `http://localhost:${port}/__dom-preview__/api/stream/previews`,
       );
       await postDomPreview(port, {
         html: "<html><body>Hello Main</body>",
       });
       await waitFor(() => {
-        expect(capturedEvents).toEqual([
+        expect(previewAddedEvents).toEqual([
           createDomPreview({
             id: expect.any(String),
             html: "<html><body>Hello Main</body>",
@@ -163,11 +163,11 @@ describe("main", () => {
       await postDomPreview(port, {
         html: "<html><body>Hello Main 2</body>",
       });
-      const { capturedEvents } = await createTestEventSource(
+      const { previewAddedEvents } = await createTestEventSource(
         `http://localhost:${port}/__dom-preview__/api/stream/previews`,
       );
       await waitFor(() => {
-        expect(capturedEvents).toEqual([
+        expect(previewAddedEvents).toEqual([
           createDomPreview({
             id: expect.any(String),
             html: "<html><body>Hello Main 1</body>",

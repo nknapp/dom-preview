@@ -99,9 +99,9 @@ function response404(messagePrefix: string): ReqResHandler {
 
 function createPreviewStreamHandler(store: DomPreviewStore) {
   const serverSideEvents = new DomPreviewSse({
-    onConnection: ({ res }) => {
+    onConnection: (handler) => {
       for (const domPreview of store.domPreviews) {
-        DomPreviewSse.writePreviewToResponse(domPreview, res);
+        handler.send("preview-added", domPreview);
       }
     },
   });
