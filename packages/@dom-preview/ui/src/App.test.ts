@@ -39,13 +39,10 @@ describe("App", () => {
     expect((await getIframeContent()).outerHTML).toEqual(
       "<html><head></head><body><div>Hello 2</div></body></html>",
     );
-    expect(dom.getByRole("treeitem", { name: "Preview 2" })).toHaveProperty(
-      "selected",
-      true,
-    );
-    expect(dom.getByRole("treeitem", { name: /initial/ })).toHaveProperty(
-      "expanded",
-      true,
+
+    expect(dom.getByRole("treeitem", { name: /Preview 2/ })).toHaveAttribute(
+      "aria-selected",
+      "true",
     );
   });
 
@@ -79,11 +76,8 @@ describe("App", () => {
       "<html><head></head><body><div>Hello 3</div></body></html>",
     );
     expect(
-      await dom.findByRole("treeitem", { name: "Last Preview" }),
-    ).toHaveProperty("selected", true);
-    expect(
-      await dom.findByRole("treeitem", { name: /context1/ }),
-    ).toHaveProperty("expanded", true);
+      await dom.findByRole("treeitem", { name: /Last Preview/ }),
+    ).toHaveAttribute("aria-selected", "true");
   });
 
   it("syncs current preview-id to URL", async () => {

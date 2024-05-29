@@ -1,29 +1,29 @@
 <template>
-  <sl-tree selection="single" @sl-selection-change="onSelectItem" ref="tree">
-    <sl-tree-item
-      v-for="[previewContext, previewItems] in Object.entries(domPreviews)"
-      :key="previewContext"
-      :expanded="
-        previewItems.some((preview) => preview.id === props.modelValue)
-      "
-    >
-      <span :title="previewContext">{{ previewContext }}</span>
-      <sl-badge
-        data-testid="previewlist-counter"
-        variant="neutral"
-        pill
-        class="ms-2"
-        >{{ domPreviews[previewContext].length }}</sl-badge
+  <ul role="tree">
+    <li :key="key" v-for="(previews, key) in domPreviews" class="text-white"  role="none">
+      <div role='treeitem'
+        class="text-xs text-slate-300 bg-neutral-700 px-8 py-2 flex justify-between gap-2 items-top"
       >
-      <PreviewItem
-        v-for="(preview, index) in domPreviews[previewContext]"
-        :key="preview.id"
-        :preview="preview"
-        :index="index"
-        :selected="modelValue === preview.id"
-      />
-    </sl-tree-item>
-  </sl-tree>
+        <div>{{ key }}</div>
+        <div>
+          <div class="rounded-full bg-neutral-200 text-black px-2" data-testid="previewlist-counter">
+            {{ previews.length }}
+          </div>
+        </div>
+      </div>
+
+      <ul class="mx-8" role="group">
+        <PreviewItem
+          v-for="(preview, index) in previews"
+          :key="preview.id"
+          :preview="preview"
+          :index="index"
+          :selected="props.modelValue === preview.id"
+          @click="select(preview)"
+        />
+      </ul>
+    </li>
+  </ul>
 </template>
 <script setup lang="ts">
 import { domPreviews } from "@/store/domPreviews.ts";
@@ -32,25 +32,21 @@ import "@shoelace-style/shoelace/dist/components/tree/tree.js";
 import "@shoelace-style/shoelace/dist/components/tree-item/tree-item.js";
 import "@shoelace-style/shoelace/dist/components/badge/badge.js";
 
-import type { SlTree, SlTreeItem } from "@shoelace-style/shoelace";
-import { ref } from "vue";
 import PreviewItem from "@/components/PreviewList/PreviewItem.vue";
+import {DomPreview} from "@/model/DomPreview.ts";
 
 export interface PreviewListProps {
   modelValue: string | null;
 }
 const props = defineProps<PreviewListProps>();
 
-const tree = ref<SlTree | null>(null);
+function select(preview: DomPreview) {
+  console.log("selecting", preview.id)
+  emit('update:modelValue', preview.id)
+}
 
 const emit = defineEmits<{
-  (event: "update:modelValue", value: string): void;
+  (event: "update:modelValue", value: string | null): void;
 }>();
 
-function onSelectItem(event: CustomEvent<{ selection: SlTreeItem[] }>) {
-  const value = event.detail.selection[0].getAttribute("data-preview-id");
-  if (value != null) {
-    emit("update:modelValue", value);
-  }
-}
 </script>

@@ -2,7 +2,7 @@
 import DomPreviewLogo from "@/components/DomPreviewLogo.vue";
 </script>
 <template>
-  <div class="w-screen h-screen flex items-stretch">
+  <div class="w-screen h-screen flex items-stretch dark:bg-stone-900">
     <aside
       class="md:w-1/3 xl:w-1/4 border-r-2 border-primary-400 h-screen flex flex-col"
       id="sidebar"

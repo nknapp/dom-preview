@@ -1,16 +1,31 @@
 import { createApp } from "vue";
 import "./style.css";
-import "@shoelace-style/shoelace/dist/themes/light.css";
-// @ts-expect-error Invalid exports definition in shoelace
-import { setBasePath } from "@shoelace-style/shoelace/dist/utilities/base-path";
 import App from "./App.vue";
 import { domPreviewLiveUpdate } from "./api/stream/previews/stream-previews";
 import { logError } from "@/utils/logger";
+import { upsertDomPreview } from "@/store/domPreviews.ts";
 
-setBasePath(
-  "https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.15.0/cdn/",
-);
-
-createApp(App).mount("#app");
+const app = createApp(App);
+app.mount("#app");
 
 domPreviewLiveUpdate().catch(logError);
+
+if (import.meta.env.DEV) {
+  [
+    "test",
+    "some very long title with a lot of words and even more to see what happens when the lines break.",
+  ].forEach((context) => {
+    for (let i = 0; i < 5; i++) {
+      setTimeout(() => {
+        upsertDomPreview({
+          id: "preview " + Math.random() * 1000,
+          html: `<div>Preview ${i + 1}</div>`,
+          context,
+          timestamp: Date.now(),
+          inputValues: [],
+          alias: `Test Preview ${i + 1}`,
+        });
+      }, i * 100);
+    }
+  });
+}

@@ -2,7 +2,9 @@ import { Component } from "vue";
 import { mount, VueWrapper } from "@vue/test-utils";
 
 interface RenderComponentOptions<Props> {
-  props: Props;
+  // Making this "Partial" is not optimal, but some weird
+  // TypeScript error happen, if we don't
+  props: Partial<Props>;
 }
 
 let wrappers: VueWrapper[] = [];
@@ -21,7 +23,6 @@ export function renderToDom<Props>(
   document.body.innerHTML = "<div id='container'></div>";
   const container = document.getElementById("container")!;
   const wrapper = mount(component, {
-    // @ts-expect-error Vue has some strange types here
     props: options.props,
     attachTo: container,
   });

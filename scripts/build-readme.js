@@ -136,7 +136,7 @@ I want to be honest. There is just to much going on in my life at the moment and
 I wanted to do it anyway. I tried to design this project to make it easily maintainable.  
 
 * There are no dependendies except for development.
-* The only runtime dependencies (which are bundled) are ${npmPackage("sirv")}, ${npmPackage("zod")}, ${npmPackage("@shoelace-style/shoelace")}
+* The only runtime dependencies (which are bundled) are ${npmPackage("sirv")}, ${npmPackage("zod")}
   and ${npmPackage("tailwind")}. The rest is for building, linting,  formatting and testing. I didn't even use a server-framework.
 * The library is small and has a clear scope. There might be some features missing, but I think of it as almost complete.
 * I don't see any way this library may impact security.

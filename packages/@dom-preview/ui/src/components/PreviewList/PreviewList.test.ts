@@ -11,7 +11,15 @@ describe("Preview", () => {
   function renderComponent({
     modelValue = null,
   }: Partial<PreviewListProps> = {}) {
-    return renderToDom(PreviewList, { props: { modelValue } });
+    const result = renderToDom(PreviewList, {
+      props: {
+        modelValue,
+        "onUpdate:modelValue"(newValue) {
+          result.wrapper.setProps({ modelValue: newValue });
+        },
+      },
+    });
+    return result;
   }
 
   it("renders contexts", async () => {
@@ -40,12 +48,12 @@ describe("Preview", () => {
     ).toHaveTextContent("2");
   });
 
-  it("initially selects the preview identified via value", async () => {
+  it("initially selects the preview identified via the modelValue", async () => {
     upsertDomPreview(createDomPreview({ id: "preview1" }));
     upsertDomPreview(createDomPreview({ id: "preview2" }));
     upsertDomPreview(createDomPreview({ id: "preview3" }));
     renderComponent({ modelValue: "preview2" });
-    const treeItem = await dom.findByRole("treeitem", { name: "Preview 2" });
+    const treeItem = await dom.findByRole("treeitem", { name: /Preview 2/ });
     expect(treeItem.getAttribute("aria-selected")).toBe("true");
   });
 
@@ -53,8 +61,7 @@ describe("Preview", () => {
     renderComponent();
     upsertDomPreview(createDomPreview({ context: "initial", html: "hmtml1" }));
     upsertDomPreview(createDomPreview({ context: "initial" }));
-    const treeItem = await dom.findByText("Preview 1");
-
+    const treeItem = await dom.findByRole("treeitem", { name: /Preview 1/ });
     expect(treeItem.getAttribute("aria-selected")).toBe("false");
     await user.click(treeItem);
     expect(treeItem.getAttribute("aria-selected")).toBe("true");
