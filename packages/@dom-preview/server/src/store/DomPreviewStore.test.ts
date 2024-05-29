@@ -129,4 +129,18 @@ describe("domPreview", () => {
       expect.soft(store.getDomPreviewById(preview2.id)).toEqual(preview2);
     });
   });
+
+  describe("removeAll", () => {
+    it("removes all previews", () => {
+      const store = new DomPreviewStore();
+      store.addDomPreview(
+        createDomPreviewCreate({
+          context: "one",
+          alias: "the one",
+        }),
+      );
+      store.clear();
+      expect(store.domPreviews).toHaveLength(0);
+    });
+  });
 });

@@ -26,4 +26,8 @@ export class DomPreviewStore extends EventEmitter<DomPreviewEvents> {
   getDomPreviewById(previewId: string): DomPreview | null {
     return this.byId.get(previewId) ?? null;
   }
+
+  clear(): void {
+    this.domPreviews.splice(0, this.domPreviews.length);
+  }
 }

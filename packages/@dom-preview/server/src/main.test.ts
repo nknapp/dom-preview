@@ -17,6 +17,7 @@ import { waitFor } from "@testing-library/dom";
 import { afterTest } from "@dom-preview/ui/src/test-utils/afterTest.js";
 import { createTestServer } from "./test-utils/createTestServer.js";
 import { logInfo } from "./utils/logger.js";
+import { delay } from "./test-utils/delay.js";
 
 describe("main", () => {
   async function createTestDomPreviewServer(
@@ -86,6 +87,21 @@ describe("main", () => {
       );
       expect(response.status).toBe(200);
       expect(await response.text()).toEqual("<html><body>Hello</body></html>");
+    });
+  });
+
+  describe("DELETE /__dom-preview__/previews", () => {
+    it("deletes all previews", async () => {
+      const { port } = await createTestDomPreviewServer();
+      await postDomPreview(port, createDomPreviewCreate({}));
+      await fetch(`http://localhost:${port}/__dom-preview__/api/previews`, {
+        method: "DELETE",
+      });
+      const { capturedEvents } = await createTestEventSource(
+        `http://localhost:${port}/__dom-preview__/api/stream/previews`,
+      );
+      await delay(10);
+      expect(capturedEvents).toHaveLength(0);
     });
   });
 
@@ -191,6 +207,7 @@ The "dom-preview" server is listening on port ${port}
 Web frontend is being served at http://localhost:${port}/__dom-preview__/
 `);
   });
+
   it.todo("opens the browser");
 
   async function postDomPreview(

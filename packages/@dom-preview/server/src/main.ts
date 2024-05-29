@@ -10,6 +10,7 @@ import { createPrefixRouter, createSimpleRouter } from "./endpoints/router.js";
 import { logInfo } from "./utils/logger.js";
 import { createProxy } from "./endpoints/proxy.js";
 import { ReqResHandler } from "./endpoints/ReqResHandler.js";
+import { createDeleteAllPreviewsHandler } from "./endpoints/createDeleteAllPreviewsHandler.js";
 
 export type { DomPreview, DomPreviewCreate } from "./model/DomPreview.js";
 
@@ -48,6 +49,7 @@ export async function runDomPreviewServer({
               res.end(store.getDomPreviewById(params!.previewId)?.html);
             },
             "POST /api/previews": createPostPreviewsHandler(store),
+            "DELETE /api/previews": createDeleteAllPreviewsHandler(store),
             "*": staticFilesDir
               ? fromNodeJs(sirv(staticFilesDir))
               : response404("Static file delivery is disabled."),
