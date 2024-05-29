@@ -2,6 +2,10 @@
 
 # Upcoming
 
+- Remove shoelace and build custom UI
+- Show relative time for each preview
+- Add "setDomPreviewErrorHandler" to register custom error handler
+
 # v0.4.0
 
 Date: 2024-05-26T21:59:15.037Z
