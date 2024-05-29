@@ -1,6 +1,6 @@
 {
   "name": "playground",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "",
   "type": "module",
   "main": "counter.js",
@@ -17,7 +17,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "dom-preview": "0.4.0"
+    "dom-preview": "0.5.0"
   },
   "devDependencies": {
     "@eslint/js": "9.3.0",
