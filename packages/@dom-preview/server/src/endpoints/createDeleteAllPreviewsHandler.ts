@@ -4,8 +4,9 @@ import { DomPreviewStore } from "../store/DomPreviewStore.js";
 export function createDeleteAllPreviewsHandler(
   store: DomPreviewStore,
 ): ReqResHandler {
-  return ({ req, res }) => {
+  return ({ res }) => {
     store.clear();
-    res.end("");
+    res.statusCode = 204;
+    res.end();
   };
 }

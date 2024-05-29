@@ -94,9 +94,13 @@ describe("main", () => {
     it("deletes all previews", async () => {
       const { port } = await createTestDomPreviewServer();
       await postDomPreview(port, createDomPreviewCreate({}));
-      await fetch(`http://localhost:${port}/__dom-preview__/api/previews`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `http://localhost:${port}/__dom-preview__/api/previews`,
+        {
+          method: "DELETE",
+        },
+      );
+      expect(response.status).toEqual(204);
       const { capturedEvents } = await createTestEventSource(
         `http://localhost:${port}/__dom-preview__/api/stream/previews`,
       );
