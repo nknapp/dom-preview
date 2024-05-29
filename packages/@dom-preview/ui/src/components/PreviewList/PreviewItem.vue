@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import "@shoelace-style/shoelace/dist/components/tree-item/tree-item.js";
-
 import { DomPreview } from "@/model/DomPreview";
-import {computed, watchEffect, watchSyncEffect} from "vue";
+import { computed } from "vue";
 import { cls } from "@/utils/cls.ts";
 import { useUnmountSignal } from "@/composables/useUnmountSignal.ts";
 import { useRelativeTime } from "@/composables/useRelativeTime.ts";
@@ -12,7 +10,6 @@ const props = defineProps<{
   index: number;
   selected: boolean;
 }>();
-
 
 const emit = defineEmits<{
   (name: "click", event: MouseEvent): void;
@@ -40,11 +37,6 @@ const dateTime = computed(() => {
 const label = computed(() => {
   return props.preview.alias ?? `Preview ${props.index + 1}`;
 });
-
-watchSyncEffect(() => {
-  console.log("selected", label.value, props.selected)
-})
-
 </script>
 
 <template>

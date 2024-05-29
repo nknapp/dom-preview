@@ -1,6 +1,6 @@
 import { createCounter } from "./counter.js";
 import { userEvent } from "@testing-library/user-event";
-import { debug, showDomPreviewErrors } from "dom-preview";
+import { debug } from "dom-preview";
 import { screen } from "@testing-library/dom";
 
 describe("counter", () => {
@@ -8,9 +8,6 @@ describe("counter", () => {
   beforeEach(() => {
     document.body.innerHTML = "";
     user = userEvent.setup();
-  });
-  afterEach(() => {
-    showDomPreviewErrors();
   });
 
   it("adds 1 for each click", async () => {
