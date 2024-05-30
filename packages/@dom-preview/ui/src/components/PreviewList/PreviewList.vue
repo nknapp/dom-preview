@@ -1,14 +1,32 @@
+<script setup lang="ts">
+import { domPreviews } from "@/store/domPreviews.ts";
+import PreviewItem from "@/components/PreviewList/PreviewItem.vue";
+import { DomPreview } from "@/model/DomPreview.ts";
+
+export interface PreviewListProps {
+  modelValue: string | null;
+}
+const props = defineProps<PreviewListProps>();
+
+function select(preview: DomPreview) {
+  emit("update:modelValue", preview.id);
+}
+
+const emit = defineEmits<{
+  (event: "update:modelValue", value: string | null): void;
+}>();
+</script>
 <template>
   <ul role="tree">
     <li
       :key="key"
       v-for="(previews, key) in domPreviews"
-      class="text-white"
+      class="p-2"
       role="none"
     >
       <div
         role="treeitem"
-        class="text-xs text-slate-300 bg-neutral-700 px-8 py-2 flex justify-between gap-2 items-top"
+        class="text-xs text-stone-100 bg-stone-700 px-8 py-2 flex justify-between gap-2 items-top"
       >
         <div>{{ key }}</div>
         <div>
@@ -34,22 +52,3 @@
     </li>
   </ul>
 </template>
-<script setup lang="ts">
-import { domPreviews } from "@/store/domPreviews.ts";
-
-import PreviewItem from "@/components/PreviewList/PreviewItem.vue";
-import { DomPreview } from "@/model/DomPreview.ts";
-
-export interface PreviewListProps {
-  modelValue: string | null;
-}
-const props = defineProps<PreviewListProps>();
-
-function select(preview: DomPreview) {
-  emit("update:modelValue", preview.id);
-}
-
-const emit = defineEmits<{
-  (event: "update:modelValue", value: string | null): void;
-}>();
-</script>

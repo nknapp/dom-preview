@@ -26,6 +26,10 @@ export function clearPreviewStore() {
   domPreviews.value = {};
 }
 
+export function isPreviewStoreEmpty(): boolean {
+  return Object.keys(domPreviews.value).length === 0;
+}
+
 function lazyGet<K extends string, V>(object: Record<K, V[]>, key: K): V[] {
   if (object[key] == null) {
     object[key] = [];

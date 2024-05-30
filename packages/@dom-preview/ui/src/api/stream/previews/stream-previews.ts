@@ -18,7 +18,7 @@ export async function domPreviewLiveUpdate() {
   });
   const handleEventInBulk = bulk(200, handler.handleEvents.bind(handler));
 
-  const eventSourceURL = resolveUrl("/__dom-preview__/api/stream/previews");
+  const eventSourceURL = resolveUrl("/api/stream/previews");
   const eventSource = new EventSource(eventSourceURL.href);
   for (const name of sseEventNames) {
     eventSource.addEventListener(name, (event) => {

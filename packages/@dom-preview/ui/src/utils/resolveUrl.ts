@@ -1,3 +1,3 @@
 export function resolveUrl(url: string) {
-  return new URL(url, window.location.href);
+  return new URL("/__dom-preview__" + url, window.location.href);
 }

@@ -1,7 +1,7 @@
 import { setupServer } from "msw/node";
 import { RequestHandler } from "msw";
 import { mockEventsEndpoint } from "@/api/stream/previews/stream-previews.mock.test-helper";
-import { logInfo } from "@/utils/logger";
+import { logError, logInfo } from "@/utils/logger";
 import { mockRemoveAllPreviewsEndpoint } from "@/api/previews/removeAllPreviews.mock.test-helper.ts";
 
 import { type Queries, QueryBin } from "query-bin";
@@ -59,7 +59,10 @@ export function setupMswForTests({ enableDebugLog = false } = {}) {
       method: request.method,
     });
   });
-  server.listen();
+  server.listen({
+    onUnhandledRequest: (request) =>
+      logError("Unhandled request", request.method, request.url),
+  });
   return {
     useRequestHandler(...handlers: RequestHandler[]) {
       server.use(...handlers);

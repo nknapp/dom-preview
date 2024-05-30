@@ -1,3 +1,5 @@
+import { resolveUrl } from "@/utils/resolveUrl.ts";
+
 export function removeAllPreviews() {
-  return fetch("/__dom-previews__/api/previews", { method: "DELETE" });
+  return fetch(resolveUrl("/api/previews"), { method: "DELETE" });
 }

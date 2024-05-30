@@ -2,6 +2,7 @@ import {
   clearPreviewStore,
   domPreviews,
   getDomPreviewById,
+  isPreviewStoreEmpty,
   lastAddedPreviewId,
   upsertDomPreview,
 } from "./domPreviews.ts";
@@ -233,5 +234,16 @@ describe("domPreview", () => {
     upsertDomPreview(domPreview1);
     upsertDomPreview(domPreview2);
     expect(getDomPreviewById("preview2")).toEqual(domPreview2);
+  });
+
+  describe("isPreviewStoreEmpty", () => {
+    it("returns 'true' if no previews are in the store", () => {
+      expect(isPreviewStoreEmpty()).toBe(true);
+    });
+
+    it("returns 'false' if at least one preview exists", () => {
+      upsertDomPreview(createDomPreview({}));
+      expect(isPreviewStoreEmpty()).toBe(false);
+    });
   });
 });

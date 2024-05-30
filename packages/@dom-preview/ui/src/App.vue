@@ -7,6 +7,7 @@ import { getDomPreviewById, lastAddedPreviewId } from "./store/domPreviews.ts";
 import PreviewFrame from "@/components/PreviewFrame/PreviewFrame.vue";
 import { DomPreview } from "./model/DomPreview";
 import { syncWithQuery } from "@/composables/syncWithQuery.ts";
+import GlobalActions from "@/components/GlobalActions.vue";
 
 const selectedPreviewId = ref<string | null>(null);
 syncWithQuery(selectedPreviewId, "dom-preview");
@@ -29,6 +30,9 @@ const selectedPreview = computed<DomPreview | null>(() => {
 
 <template>
   <DefaultLayout>
+    <template #actions>
+      <GlobalActions />
+    </template>
     <template #sidebar>
       <PreviewList v-model="highlightedPreviewId" />
     </template>

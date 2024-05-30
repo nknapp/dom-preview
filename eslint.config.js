@@ -8,6 +8,14 @@ export default [
   {
     ignores: ["**/dist/"],
   },
+  {
+    rules: {
+      "no-restricted-syntax": [
+        "warn",
+        "CallExpression[callee.name='debugInPlayMode']",
+      ],
+    },
+  },
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,
   ...pluginVue.configs["flat/essential"],

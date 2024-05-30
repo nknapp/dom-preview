@@ -4,7 +4,10 @@ import { dom } from "./test-utils/dom.ts";
 import { createDomPreview } from "@/model/DomPreview.test-helper.ts";
 import { upsertDomPreview } from "@/store/domPreviews.ts";
 import { user } from "@/test-utils/user.ts";
-import { within } from "@testing-library/dom";
+import { waitFor, within } from "@testing-library/dom";
+import { capturedRequests, setupMswForTests } from "@/test-utils/setupMsw.ts";
+
+setupMswForTests();
 
 describe("App", () => {
   it("renders the title", async () => {
@@ -121,7 +124,24 @@ describe("App", () => {
     expect(lastName).toHaveValue("Smith");
   });
 
-  it.todo("clears the previews then the clear button is clicked");
+  it("clears the previews then the clear button is clicked", async () => {
+    renderToDom(App, { props: {} });
+    upsertDomPreview(
+      createDomPreview({
+        id: "preview1",
+        alias: "My Preview",
+      }),
+    );
+    await dom.findByText("My Preview");
+    await user.click(dom.getByRole("button", { name: "Remove all" }));
+    await capturedRequests.find.byMethodAndUrl(
+      "DELETE",
+      "/__dom-preview__/api/previews",
+    );
+    await waitFor(() => {
+      expect(dom.queryByText("My Preview")).toBeNull();
+    });
+  });
 });
 
 async function getIframeContent() {
