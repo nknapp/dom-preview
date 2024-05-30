@@ -14,9 +14,9 @@ describe("startFetchingPreviews", () => {
     vi.useRealTimers();
   });
   it("fetches events from the server and stores then into the store", async () => {
-    const { stop } = await domPreviewLiveUpdate();
-
+    await startPreviewLiveUpdateForThisTest();
     eventsEndpoint.send(
+      "preview-added",
       createDomPreview({ id: "preview-1", html: "html1", context: "initial" }),
     );
 
@@ -31,51 +31,79 @@ describe("startFetchingPreviews", () => {
         ],
       });
     });
+  });
 
-    afterTest(stop);
+  it("clears the store on 'previews-cleared", async () => {
+    await startPreviewLiveUpdateForThisTest();
+    eventsEndpoint.send(
+      "preview-added",
+      createDomPreview({ context: "initial" }),
+    );
+    await waitFor(() => {
+      expect(domPreviews.value["initial"]).toBeDefined();
+    });
+    eventsEndpoint.send("previews-cleared", {});
+    await waitFor(() => {
+      expect(domPreviews.value["initial"]).toBeUndefined();
+    });
   });
 
   it("throttles and groups events", async () => {
     vi.useFakeTimers();
-    const { stop } = await domPreviewLiveUpdate();
-    const watcherCalls: DomPreview["id"][][] = [];
-    watch(
-      domPreviews,
-      (value) => {
-        watcherCalls.push(value["initial"].map((item) => item.id));
-      },
-      { deep: true },
-    );
+    await startPreviewLiveUpdateForThisTest();
+    const { states } = captureDomPreviewContext("initial");
 
-    eventsEndpoint.send(
-      createDomPreview({ id: "preview1", context: "initial" }),
-    );
+    eventsEndpoint.send("preview-added", preview("preview1", "initial"));
     await vi.advanceTimersByTimeAsync(250);
-    expect(domPreviews.value["initial"]).toHaveLength(1);
 
-    eventsEndpoint.send(
-      createDomPreview({ id: "preview2", context: "initial" }),
-    );
+    eventsEndpoint.send("preview-added", preview("preview2", "initial"));
     await vi.advanceTimersByTimeAsync(1);
-    expect(domPreviews.value["initial"]).toHaveLength(1);
 
-    eventsEndpoint.send(
-      createDomPreview({ id: "preview3", context: "initial" }),
-    );
+    eventsEndpoint.send("preview-added", preview("preview3", "initial"));
     await vi.advanceTimersByTimeAsync(1);
-    expect(domPreviews.value["initial"]).toHaveLength(1);
 
-    eventsEndpoint.send(
-      createDomPreview({ id: "preview4", context: "initial" }),
-    );
+    eventsEndpoint.send("preview-added", preview("preview4", "initial"));
     await vi.advanceTimersByTimeAsync(200);
-    // expect(domPreviews.value["initial"]).toHaveLength(4);
 
-    expect(watcherCalls).toEqual([
+    expect(states).toEqual([
       ["preview1"],
       ["preview1", "preview2", "preview3", "preview4"],
     ]);
+  });
 
-    afterTest(stop);
+  it("applies 'add' and 'clear' events in the correct order", async () => {
+    vi.useFakeTimers();
+    await startPreviewLiveUpdateForThisTest();
+
+    eventsEndpoint.send("preview-added", preview("preview1", "initial"));
+    eventsEndpoint.send("previews-cleared", {});
+    eventsEndpoint.send("preview-added", preview("preview2", "initial"));
+    await vi.advanceTimersByTimeAsync(250);
+
+    expect(domPreviews.value).toEqual({
+      initial: [createDomPreview({ id: "preview2", context: "initial" })],
+    });
   });
 });
+
+async function startPreviewLiveUpdateForThisTest() {
+  const { stop } = await domPreviewLiveUpdate();
+  afterTest(stop);
+}
+
+function captureDomPreviewContext(context: string) {
+  const states: DomPreview["id"][][] = [];
+  const stopWatching = watch(
+    domPreviews,
+    (currentDomPreviews) => {
+      states.push(currentDomPreviews[context].map((item) => item.id));
+    },
+    { deep: true },
+  );
+  afterTest(stopWatching);
+  return { states };
+}
+
+function preview(id: string, context: string) {
+  return createDomPreview({ id, context });
+}

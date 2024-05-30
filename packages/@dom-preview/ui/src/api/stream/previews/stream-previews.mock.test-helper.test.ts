@@ -21,6 +21,7 @@ describe("eventsMock", () => {
     await eventsEndpoint.waitForConnections(1);
 
     eventsEndpoint.send(
+      "preview-added",
       createDomPreview({
         id: "preview2",
         html: "<html><body>Hello</body></html>",

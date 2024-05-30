@@ -1,6 +1,6 @@
 import { http, HttpResponse, RequestHandler } from "msw";
-import { DomPreview } from "@/model/DomPreview.ts";
 import { waitFor } from "@testing-library/dom";
+import { SseEventsMap } from "@/api/stream/previews/SseEventsMap.ts";
 
 const encoder = new TextEncoder();
 
@@ -8,7 +8,7 @@ export interface MockEventsEndpointReturn {
   handler: RequestHandler;
   nrConnections(): number;
   waitForConnections(count: number): Promise<void>;
-  send(domPreview: DomPreview): void;
+  send<T extends keyof SseEventsMap>(name: T, data: SseEventsMap[T]): void;
   clearConnections(): void;
 }
 
@@ -50,12 +50,16 @@ export function mockEventsEndpoint(): MockEventsEndpointReturn {
     streamControllers.clear();
   }
 
-  function send(domPreview: DomPreview): void {
+  function send<T extends keyof SseEventsMap>(
+    name: T,
+    data: SseEventsMap[T],
+  ): void {
     for (const streamController of streamControllers) {
-      streamController.enqueue(encoder.encode(`event: preview-added\n`));
+      streamController.enqueue(encoder.encode(`event: ${name}\n`));
       streamController.enqueue(
-        encoder.encode(`data: ${JSON.stringify(domPreview)}\n\n`),
+        encoder.encode(`data: ${JSON.stringify(data)}\n`),
       );
+      streamController.enqueue("\n");
     }
   }
   return { handler, send, waitForConnections, nrConnections, clearConnections };

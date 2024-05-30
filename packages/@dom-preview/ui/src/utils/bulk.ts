@@ -4,10 +4,13 @@ export function bulk<T>(
 ): (value: T) => void {
   let buffer: T[] = [];
   let timeoutInProgress = false;
+
   return (value) => {
     buffer.push(value);
+
     if (timeoutInProgress) return;
     timeoutInProgress = true;
+
     setTimeout(() => {
       timeoutInProgress = false;
       callback(buffer);
