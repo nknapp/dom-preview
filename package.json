@@ -1,6 +1,6 @@
 {
   "name": "dom-preview-monorepo",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "A replacement for vitest-preview with more features.",
   "types": "./dist/index.d.cts",
   "module": "./dist/index.js",
