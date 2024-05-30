@@ -7,7 +7,7 @@ import { DomPreviewSse } from "./endpoints/DomPreviewSse.js";
 import { DomPreviewStore } from "./store/DomPreviewStore.js";
 import { createPostPreviewsHandler } from "./endpoints/createPostPreviewsHandler.js";
 import { createPrefixRouter, createSimpleRouter } from "./endpoints/router.js";
-import { logInfo } from "./utils/logger.js";
+import { logError, logInfo } from "./utils/logger.js";
 import { createProxy } from "./endpoints/proxy.js";
 import { ReqResHandler } from "./endpoints/ReqResHandler.js";
 import { createDeleteAllPreviewsHandler } from "./endpoints/createDeleteAllPreviewsHandler.js";
@@ -115,10 +115,15 @@ function createPreviewStreamHandler(store: DomPreviewStore) {
 }
 
 function logRequests(handler: ReqResHandler): ReqResHandler {
-  return (...args) => {
-    const req = args[0].req;
-    logInfo(`${new Date().toISOString()} ${req.method} ${req.url}`);
-    handler(...args);
+  return ({ req, res, ...args }) => {
+    handler({ req, res, ...args });
+    const requestInfo = `${new Date().toISOString()} ${req.method} ${req.url}`;
+    res.on("finish", () => {
+      logInfo(`${requestInfo} -> ${res.statusCode}`);
+    });
+    res.on("error", (error) => {
+      logError(`Error in request: ${requestInfo}`, error);
+    });
   };
 }
 
