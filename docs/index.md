@@ -3,9 +3,12 @@
 layout: home
 
 hero:
-  name: "DOM-Preview"
-  text: "Unit & Component test visualizer"
+  name: "dom-preview"
+  text: "component test visualizer"
   tagline: "See what your components actually look like when your tests fail."
+  image:
+    src: /images/hero.webp
+    alt: VitePress
   actions:
     - theme: brand
       text: Getting started
