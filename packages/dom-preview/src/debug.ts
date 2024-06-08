@@ -4,7 +4,7 @@ import { DomPreviewCreate } from "@dom-preview/server";
 import { context } from "./context";
 import { errorHandler } from "./errors";
 
-export function debug(alias: string | undefined): void {
+export function debug(alias?: string): void {
   fetch(`http://localhost:${serverPort}/__dom-preview__/api/previews`, {
     method: "POST",
     body: JSON.stringify({
