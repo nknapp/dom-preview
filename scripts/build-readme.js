@@ -1,4 +1,4 @@
-import packageJson from "../package.json" assert { type: "json" };
+import packageJson from "../packages/dom-preview/package.json" assert { type: "json" };
 import { editFiles } from "./tools/editFile.js";
 import fs from "node:fs";
 

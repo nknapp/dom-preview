@@ -27,7 +27,7 @@ There are three components
 ## Installation and configuration
 
 ```bash
-npm install dom-preview-monorepo
+npm install dom-preview
 ```
 
 ## Usage

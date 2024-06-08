@@ -8,7 +8,8 @@
     "packages/@dom-preview/ui",
     "packages/@dom-preview/server",
     "packages/dom-preview",
-    "playground"
+    "playground",
+    "dom-preview.knappi.org"
   ],
   "type": "module",
   "scripts": {
@@ -17,7 +18,7 @@
     "fix": "run-s fix:*",
     "test:format": "prettier -c .",
     "test:lint": "eslint . --max-warnings 0",
-    "test:workspaces": "npm run test --workspaces",
+    "test:workspaces": "npm run test --workspaces  --if-present",
     "test": "run-s test:*",
     "build": "npm run build --workspaces --if-present",
     "build-and-test": "run-s build test",
