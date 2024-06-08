@@ -8,7 +8,7 @@ hero:
   tagline: "See what your components actually look like when your tests fail."
   image:
     src: /images/hero.webp
-    alt: VitePress
+    alt: dom-preview
   actions:
     - theme: brand
       text: Getting started
