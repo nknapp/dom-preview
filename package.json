@@ -9,7 +9,7 @@
     "packages/@dom-preview/server",
     "packages/dom-preview",
     "playground",
-    "dom-preview.knappi.org"
+    "docs"
   ],
   "type": "module",
   "scripts": {
@@ -36,6 +36,7 @@
     "server": "npm run --workspace=packages/@dom-preview/server",
     "dom-preview": "npm run --workspace=packages/dom-preview",
     "playground": "npm run --workspace=packages/dom-preview",
+    "docs": "npm run --workspace=docs",
     "----- version bump automation -------": "",
     "preversion": "npm run build && npm run test",
     "version": "node ./scripts/on-version-bump.js",
