@@ -11,6 +11,7 @@ export default defineConfig({
     nav: [
       { text: "Home", link: "/" },
       { text: "Getting started", link: "/getting-started" },
+      { text: "Impress", link: "/impress" },
     ],
 
     sidebar: [
@@ -21,6 +22,12 @@ export default defineConfig({
           { text: "Getting started", link: "/getting-started" },
           { text: "Advanced topics", link: "/advanced-topics" },
           { text: "The ultimate setup", link: "/ultimate-setup" },
+        ],
+      },
+      {
+        text: "Impress",
+        items: [
+          { text: "Impress", link: "/impress" },
         ],
       },
     ],
