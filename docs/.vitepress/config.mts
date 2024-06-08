@@ -4,7 +4,9 @@ import { defineConfig } from "vitepress";
 export default defineConfig({
   title: "DOM-Preview",
   description: "A tool for visualizing your component tests",
+  head: [["link", { rel: "icon", href: "/favicon.svg" }]],
   themeConfig: {
+    logo: "/images/logo.svg",
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: "Home", link: "/" },
