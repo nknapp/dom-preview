@@ -4,7 +4,17 @@ import { defineConfig } from "vitepress";
 export default defineConfig({
   title: "DOM-Preview",
   description: "A tool for visualizing your component tests",
-  head: [["link", { rel: "icon", href: "/favicon.svg" }]],
+  head: [
+    ["link", { rel: "icon", href: "/favicon.svg" }],
+    [
+      "script",
+      {
+        defer: true,
+        "data-domain": "dom-preview.knappi.org",
+        src: "https://plausible.io/js/script.js",
+      },
+    ],
+  ],
   themeConfig: {
     logo: "/images/logo.svg",
     // https://vitepress.dev/reference/default-theme-config
@@ -26,9 +36,7 @@ export default defineConfig({
       },
       {
         text: "Impress",
-        items: [
-          { text: "Impress", link: "/impress" },
-        ],
+        items: [{ text: "Impress", link: "/impress" }],
       },
     ],
 

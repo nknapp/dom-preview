@@ -20,7 +20,7 @@ This page does not use cookies to track visitors. I use <a href="https://plausib
 Plausible does not use cookies und and does not collect personal data.
 
 - <a href="https://plausible.io/privacy-focused-web-analytics">Blog post</a> about privacy guidelines of Plausible.io
-- <a href="https://plausible.io/aikido-exam.knappi.org/">The public tracking dashboard</a> shows the collected data.
+- <a href="https://plausible.io/dom-preview.knappi.org/">The public tracking dashboard</a> shows the collected data.
 
 # GitHub Pages Service
 
