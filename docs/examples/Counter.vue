@@ -14,7 +14,7 @@ const count = computed(() => {
       placeholder="Type a word"
       type="text"
       v-model="word"
-    />\
+    />
     <span>'{{ word }}' has {{ count }} characters.</span>
   </div>
 </template>
