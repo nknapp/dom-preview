@@ -8,6 +8,15 @@
   "files": [
     "dist"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nknapp/dom-preview",
+    "directory": "packages/@dom-preview/ui"
+  },
+  "homepage": "https://dom-preview.knappi.org",
+  "bugs": {
+    "url": "https://github.com/nknapp/dom-preview/issues"
+  },
   "scripts": {
     "dev:unit": "vitest --ui",
     "dev:server": "vite",

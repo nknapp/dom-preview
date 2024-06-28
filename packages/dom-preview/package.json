@@ -11,6 +11,19 @@
   "files": [
     "dist"
   ],
+  "funding": [
+    "https://www.paypal.com/donate/?hosted_button_id=GB656ZSAEQEXN",
+    "https://de.liberapay.com/nils.knappmeier/"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nknapp/dom-preview",
+    "directory": "packages/dom-preview"
+  },
+  "homepage": "https://dom-preview.knappi.org",
+  "bugs": {
+    "url": "https://github.com/nknapp/dom-preview/issues"
+  },
   "type": "module",
   "exports": {
     "require": {

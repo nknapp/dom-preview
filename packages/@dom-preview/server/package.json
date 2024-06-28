@@ -9,6 +9,15 @@
   "files": [
     "dist"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nknapp/dom-preview",
+    "directory": "packages/@dom-preview/server"
+  },
+  "homepage": "https://dom-preview.knappi.org",
+  "bugs": {
+    "url": "https://github.com/nknapp/dom-preview/issues"
+  },
   "scripts": {
     "test": "run-s test:*",
     "test:ts": "tsc",
