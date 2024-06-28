@@ -38,7 +38,9 @@ Run the server
 npx dom-preview
 ```
 
-Open http://localhost:5007/**dom-preview**/
+<!-- prettier-ignore-start -->
+Open http://localhost:5007/__dom-preview__/
+<!-- prettier-ignore-end -->
 
 In your test, call the debug function
 

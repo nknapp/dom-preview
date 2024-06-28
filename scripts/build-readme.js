@@ -53,7 +53,9 @@ Run the server
 
 ${fences("bash", "npx dom-preview")}
 
+<!-- prettier-ignore-start -->
 Open http://localhost:5007/__dom-preview__/
+<!-- prettier-ignore-end -->
 
 In your test, call the debug function
 
