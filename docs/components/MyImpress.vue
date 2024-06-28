@@ -51,7 +51,7 @@ onMounted(() => {
 });
 </script>
 <template>
-  <div style="background: white; padding: 1rem;">
+  <div style="background: white; padding: 1rem">
     <canvas ref="canvasRef" />
   </div>
 </template>
