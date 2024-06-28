@@ -2,6 +2,10 @@
 
 # Upcoming
 
+# v0.6.2
+
+Date: 2024-06-28T05:32:37.575Z
+
 Docs:
 
 - Fix link to UI in README

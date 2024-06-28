@@ -1,6 +1,6 @@
 {
   "name": "dom-preview.knappi.org",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "The source-code for dom-preview.knappi.org",
   "main": "index.js",
   "scripts": {
@@ -23,7 +23,7 @@
     "@testing-library/user-event": "14.5.2",
     "@testing-library/vue": "8.1.0",
     "@vitejs/plugin-vue": "5.0.5",
-    "dom-preview": "0.6.1",
+    "dom-preview": "0.6.2",
     "jsdom": "24.1.0",
     "npm-run-all": "4.1.5",
     "vitepress": "1.2.3",
