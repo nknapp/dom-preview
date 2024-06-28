@@ -2,9 +2,17 @@
 
 # Upcoming
 
+Fixes:
+
+- Make "alias"-parameter in "debug" function optional
+
 # v0.6.0
 
 Date: 2024-05-30T15:53:01.064Z
+
+Features:
+
+- Add "delete" button to delete all stored previews
 
 # v0.5.0
 
