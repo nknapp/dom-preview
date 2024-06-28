@@ -2,6 +2,10 @@
 
 # Upcoming
 
+# v0.6.1
+
+Date: 2024-06-28T05:20:32.360Z
+
 Fixes:
 
 - Make "alias"-parameter in "debug" function optional
