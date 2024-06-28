@@ -1,6 +1,6 @@
 {
   "name": "dom-preview",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "description": "A replacement for vitest-preview with more features.",
   "types": "./dist/index.d.cts",
   "module": "./dist/index.mjs",
@@ -48,8 +48,8 @@
   "author": "Nils Knappmeier",
   "license": "MIT",
   "dependencies": {
-    "@dom-preview/server": "0.6.2",
-    "@dom-preview/ui": "0.6.2"
+    "@dom-preview/server": "0.6.3",
+    "@dom-preview/ui": "0.6.3"
   },
   "devDependencies": {
     "@eslint/js": "9.3.0",

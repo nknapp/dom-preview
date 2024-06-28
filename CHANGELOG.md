@@ -2,6 +2,10 @@
 
 # Upcoming
 
+# v0.6.3
+
+Date: 2024-06-28T05:49:56.431Z
+
 - Add funding links to package.json
 
 # v0.6.2
